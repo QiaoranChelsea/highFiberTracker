@@ -3,6 +3,9 @@ import React, { Component } from "react";
 import axios from 'axios';
 import "./App.css";
 import SearchForm from './components/searchForm'
+import EnhancedTable from './components/table'
+import Grid from '@material-ui/core/Grid';
+
 
 //  https://api.nal.usda.gov/ndb/search/?format=json&q=butter&sort=n&max=25&offset=0&api_key=DEMO_KEY 
 
@@ -36,20 +39,36 @@ class App extends Component {
 
   }
 
-  // get Fiber amount based on food's ndbno
+  // get Fiber amount based on food's ndbno to do 
 
   render() {
   	return(
+  		<div>
 	    <div className="App">
 	    	<header className="App-header">
 	    		<h1 className="App-title"> High Fiber Tracker</h1>
 	    	</header>
-	    	<SearchForm getFood={this.getFood}/>
-	    	{this.state.searchFlag && this.state.items ? <div>{this.state.items.map((item,index) => (
+
+
+	  </div>
+
+			<Grid item xs={6}  >
+				    	{this.state.searchFlag && this.state.items ? <div>{this.state.items.map((item,index) => (
 							        <li key={index}>{item.group}, {item.ndbno}, {item.name}</li>
 							    ))} </div>: <p>Nothing found, please enter a food name</p>
 	    	}	
+    			<SearchForm getFood={this.getFood}/>
+			</Grid>
 
+	  	<Grid container >
+  	    <Grid item xs={6}  >
+  	    	<EnhancedTable/>
+    
+      	</Grid>
+        <Grid item xs={6} >
+         	<EnhancedTable/>
+        </Grid>
+			</Grid>
 	  </div>
 
 	  
