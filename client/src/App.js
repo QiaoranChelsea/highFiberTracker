@@ -1,13 +1,12 @@
 // client/src/App.js
 import React, { Component } from "react";
-import axios from 'axios';
+// import axios from 'axios';
 import "./App.css";
 import SearchForm from './components/searchForm'
-import EnhancedTable from './components/table'
-import Grid from '@material-ui/core/Grid';
+// import SearchTable from './components/searchTable'
+// import Grid from '@material-ui/core/Grid';
 
 
-//  https://api.nal.usda.gov/ndb/search/?format=json&q=butter&sort=n&max=25&offset=0&api_key=DEMO_KEY 
 
 
 class App extends Component {
@@ -16,28 +15,39 @@ class App extends Component {
   	searchFlag:false,
   }
 
-  // get Food from user and perfrom search API in Composition Database
-  getFood=(e)=>{
- 	e.preventDefault();
- 	const food = e.target.elements.foodName.value;
- 	const APIKey = "eb121QN3xOm3Uw9O94P21n1MaWFIDxNXdTgifYR3";
- 	if(food){
- 		 axios.get(`https://api.nal.usda.gov/ndb/search/?format=json&q=${food}&sort=n&max=5&offset=0&api_key=${APIKey}`)
- 		.then((res)=>{
-			const items = res.data.list.item;
-			this.setState({items:items});
-			this.setState({searchFlag:true});
-			console.log(items);
- 		})
- 		.catch(function (error) {
-    		console.log(error);
-    		this.setState({searchFlag:false});
+  // // get Food from user and perfrom search API in Composition Database
+  // getFood=(e)=>{
+ 	// e.preventDefault();
+  // console.log("e:::::",e.target.elements);
+ 	// const food = e.target.elements.foodName.value;
+  // // const servingsize = e.target.elements.servingSize.value;
+  // // console("servingsize", servingsize);
+ 	// // const APIKey = "eb121QN3xOm3Uw9O94P21n1MaWFIDxNXdTgifYR3";
+ 	// if(food){
+  //    // get ndbno based on food name 
+ 	// 	 axios.get(`https://api.nal.usda.gov/ndb/search/?format=json&q=${food}&sort=n&max=5&offset=0&api_key=${APIKey}`)
+ 	// 	.then((res)=>{
+		// 	const items = res.data.list.item;
+		// 	this.setState({items:items});
+		// 	this.setState({searchFlag:true});
+  //     // getFiber(items[0].ndbno,servingsize);
+		// 	// console.log(items);
+  //     // console.log("...data");
+  //     // console.log(items[0].name,items[0].manu, items[0].ndbno);
 
-  		});
- 	}
- 	else return;
 
-  }
+ 	// 	})
+ 	// 	.catch(function (error) {
+  //   		console.log(error);
+  //   		this.setState({searchFlag:false});
+  // 		});
+ 	// }
+ 	// else return;
+  // }
+
+
+
+
 
   // get Fiber amount based on food's ndbno to do 
 
@@ -48,27 +58,23 @@ class App extends Component {
 	    	<header className="App-header">
 	    		<h1 className="App-title"> High Fiber Tracker</h1>
 	    	</header>
-
+      <SearchForm/>
 
 	  </div>
 
-			<Grid item xs={6}  >
-				    	{this.state.searchFlag && this.state.items ? <div>{this.state.items.map((item,index) => (
-							        <li key={index}>{item.group}, {item.ndbno}, {item.name}</li>
-							    ))} </div>: <p>Nothing found, please enter a food name</p>
-	    	}	
-    			<SearchForm getFood={this.getFood}/>
-			</Grid>
+    	
 
+{/*
 	  	<Grid container >
   	    <Grid item xs={6}  >
-  	    	<EnhancedTable/>
+  	    	<SearchTable/>
     
       	</Grid>
         <Grid item xs={6} >
-         	<EnhancedTable/>
+         	<SearchTable/>
         </Grid>
 			</Grid>
+*/}
 	  </div>
 
 	  
