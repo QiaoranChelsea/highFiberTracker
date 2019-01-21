@@ -16,6 +16,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
 import DeleteIcon from '@material-ui/icons/Delete';
+// import AddIcon from '@material-ui/icons/Add';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 
@@ -52,7 +53,7 @@ function getSorting(order, orderBy) {
 const rows = [
   { id: 'foodName', numeric: false, disablePadding: true, label: 'Food Name' },
   { id: 'fiberUnit', numeric: true, disablePadding: false, label: 'Fiber (100g per serving)' },
-  { id: 'fibertotal', numeric: true, disablePadding: false, label: 'Total Fiber' },
+  { id: 'fiberTotal', numeric: true, disablePadding: false, label: 'Total Fiber' },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -154,7 +155,7 @@ let EnhancedTableToolbar = props => {
           </Typography>
         ) : (
           <Typography variant="h6" id="tableTitle">
-            
+            Select and Add Item You Eat Today 
           </Typography>
         )}
       </div>
@@ -162,7 +163,11 @@ let EnhancedTableToolbar = props => {
       <div className={classes.actions}>
         {numSelected > 0 ? (
           <Tooltip title="Delete">
-            <IconButton aria-label="Delete" onClick={() => { console.log('want to delete item: '+ props.selectedItem); }} >
+            <IconButton aria-label="Delete" onClick={() => { 
+              props.deleteSelectedItems(props.selectedItems);
+              // console.log('selected item: '+ props.selectedId); 
+              // console.log('++selectedItems: ', props.selectedItems);
+            }} >
               <DeleteIcon />
             </IconButton>
           </Tooltip>
@@ -177,6 +182,7 @@ let EnhancedTableToolbar = props => {
     </Toolbar>
   );
 };
+
 
 EnhancedTableToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
@@ -197,28 +203,25 @@ const styles = theme => ({
 
 
 class EnhancedTable extends React.Component {
-  state = {
-    order: 'asc',
-    orderBy: 'foodName',
-    selected: [],
-    data: [
-      createData('Cupcake', 305, 3.7),
-      createData('Donut', 452, 25.0),
-      createData('Eclair', 262, 16.0),
-      createData('Frozen yoghurt', 24, 4.0),
-      createData('Gingerbread', 356, 16.0),
-      createData('Honeycomb', 408, 3.2,),
-      createData('Ice cream sandwich', 237, 9.0),
-      createData('Jelly Bean', 375, 0.0),
-      createData('KitKat', 518, 26.0),
-      createData('Lollipop', 392, 0.2),
-      createData('Marshmallow', 318, 0),
-      createData('Nougat', 360, 19.0),
-      createData('Oreo', 437, 18.0),
-    ],
-    page: 0,
-    rowsPerPage: 5,
-  };
+  constructor(props){
+    super(props);
+    this.state = {
+      order: 'asc',
+      orderBy: 'foodName',
+      selectedItems: [],
+      selected: [],
+      data: [],
+      page: 0,
+      rowsPerPage: 5,
+      addAction:false,
+    };
+    this.handleRequestSort = this.handleRequestSort.bind(this);
+    this.handleSelectAllClick = this.handleSelectAllClick.bind(this);
+    this.handleClick = this.handleClick.bind(this);
+    this.handleChangePage = this.handleChangePage.bind(this);
+    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
+    this.deleteSelectedItems = this.deleteSelectedItems.bind(this);
+  }
 
   handleRequestSort = (event, property) => {
     const orderBy = property;
@@ -227,7 +230,6 @@ class EnhancedTable extends React.Component {
     if (this.state.orderBy === property && this.state.order === 'desc') {
       order = 'asc';
     }
-
     this.setState({ order, orderBy });
   };
 
@@ -240,9 +242,11 @@ class EnhancedTable extends React.Component {
   };
 
   handleClick = (event, id) => {
-    const { selected } = this.state;
+    const { selected,selectedItems } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
+
+   // console.log(selectedItem[0]);
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -256,14 +260,45 @@ class EnhancedTable extends React.Component {
         selected.slice(selectedIndex + 1),
       );
     }
-    this.setState({ selected: newSelected });
+    this.setState({ selected: newSelected});
 
+
+    var selectedItem = this.state.data.filter(function (elem) {
+        return elem.id === id;
+    });
+    // const selectedItemIdx = selectedItems.indexOf(selectedItem);
+    const selectedItemIdx = selectedItems.map(function(e) { return e.id; }).indexOf(id);
+
+    let newSelectedItem = [] 
+    if (selectedItemIdx === -1) {
+      newSelectedItem = newSelectedItem.concat(selectedItems, selectedItem);
+    } else if (selectedItemIdx === 0) {
+      newSelectedItem = newSelectedItem.concat(selectedItems.slice(1));
+    } else if (selectedItemIdx === selected.length - 1) {
+      newSelectedItem = newSelectedItem.concat(selectedItems.slice(0, -1));
+    } else if (selectedItemIdx > 0) {
+      newSelectedItem = newSelectedItem.concat(
+        selectedItems.slice(0, selectedItemIdx),
+        selectedItems.slice(selectedItemIdx + 1),
+      );
+    }
+    // console.log('selectItenIdx', selectedItemIdx, newSelectedItem);
+    this.setState({ selectedItems: newSelectedItem});
   };
 
-  handleAdd = (event, id)=>{
 
+  deleteSelectedItems(items){
+    // console.log(selectedItems);
+    const { selectedItems } = this.state;
+
+    selectedItems.map((item)=>{
+      let newData = this.state.data.filter( elem => elem.foodName !== item.foodName ); 
+      this.setState({data:newData})
+    });
 
   }
+
+
 
   handleChangePage = (event, page) => {
     this.setState({ page });
@@ -275,16 +310,24 @@ class EnhancedTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+  componentWillReceiveProps(props) {
+    const { tableData } = this.props;
+    if (props.tableData.length !== tableData.length) {
+       var datas = props.tableData.map((item)=>{
+        return createData(item.foodName,item.fiberUnit, item.fiberTotal )
+        })
+      this.setState({data:datas});
+    }
+  }
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { data, order, orderBy, selected, selectedItems, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
       <div>
-      <h1>selected: {this.state.selected}</h1>
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} selectedItem={selected} />
+        <EnhancedTableToolbar numSelected={selected.length} selectedId={selected} selectedItems={selectedItems} deleteSelectedItems={this.deleteSelectedItems} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead

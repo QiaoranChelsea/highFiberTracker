@@ -322,7 +322,6 @@ class EnhancedTable extends React.Component {
 
     return (
       <div>
-      <h1>selected: {this.state.selected.name}</h1>
       <Paper className={classes.root}>
         <EnhancedTableToolbar numSelected={selected.length} selectedId={selected} selectedItems={selectedItems} getSelectedItems={getSelectedItems} />
         <div className={classes.tableWrapper}>

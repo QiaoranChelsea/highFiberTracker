@@ -127,7 +127,6 @@ class SearchForm extends Component {
          <MyInputBase type="text" name="servingSize" placeholder="serving size(g)" value={this.state.servingSize} onChange={this.handleChange('servingSize')} />
          <Button type= "submit" value="Submit">Submit</Button>
        </form>
-       {this.state.nameFiberList.length > 0 ? <h1>{this.state.nameFiberList[0].foodName}</h1> : <h1>enter sth</h1>}
       </div>
 
     

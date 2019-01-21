@@ -6,6 +6,7 @@ import SearchForm from './components/searchForm'
 import SearchTable from './components/searchTable';
 import SelectedTable from './components/selectedTable';
 import Grid from '@material-ui/core/Grid';
+import Table from './components/table';
 
 
 
@@ -71,7 +72,10 @@ class App extends Component {
 
         </Grid>
 
+
+
       </Grid>
+      <Table/>
 
 
 
