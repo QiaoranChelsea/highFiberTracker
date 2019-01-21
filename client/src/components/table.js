@@ -15,15 +15,14 @@ import Paper from '@material-ui/core/Paper';
 import Checkbox from '@material-ui/core/Checkbox';
 import IconButton from '@material-ui/core/IconButton';
 import Tooltip from '@material-ui/core/Tooltip';
-// import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
 import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 
 let counter = 0;
-function createData(foodName,fiberUnit, fiberTotal) {
+function createData(name, calories, fat, carbs, protein) {
   counter += 1;
-  return { id: counter, foodName,fiberUnit, fiberTotal };
+  return { id: counter, name, calories, fat, carbs, protein };
 }
 
 function desc(a, b, orderBy) {
@@ -51,9 +50,11 @@ function getSorting(order, orderBy) {
 }
 
 const rows = [
-  { id: 'foodName', numeric: false, disablePadding: true, label: 'Food Name' },
-  { id: 'fiberUnit', numeric: true, disablePadding: false, label: 'Fiber (100g per serving)' },
-  { id: 'fiberTotal', numeric: true, disablePadding: false, label: 'Total Fiber' },
+  { id: 'name', numeric: false, disablePadding: true, label: 'Dessert (100g serving)' },
+  { id: 'calories', numeric: true, disablePadding: false, label: 'Calories' },
+  { id: 'fat', numeric: true, disablePadding: false, label: 'Fat (g)' },
+  { id: 'carbs', numeric: true, disablePadding: false, label: 'Carbs (g)' },
+  { id: 'protein', numeric: true, disablePadding: false, label: 'Protein (g)' },
 ];
 
 class EnhancedTableHead extends React.Component {
@@ -155,20 +156,16 @@ let EnhancedTableToolbar = props => {
           </Typography>
         ) : (
           <Typography variant="h6" id="tableTitle">
-            Select and Add Item You Eat Today 
+            Nutrition
           </Typography>
         )}
       </div>
       <div className={classes.spacer} />
       <div className={classes.actions}>
         {numSelected > 0 ? (
-          <Tooltip title="Add">
-            <IconButton aria-label="Add" onClick={() => { 
-              props.getSelectedItems(props.selectedItems);
-              // console.log('selected item: '+ props.selectedId); 
-              // console.log('selectedItems: ', props.selectedItems);
-            }} >
-              <AddIcon />
+          <Tooltip title="Delete">
+            <IconButton aria-label="Delete">
+              <DeleteIcon />
             </IconButton>
           </Tooltip>
         ) : (
@@ -183,7 +180,6 @@ let EnhancedTableToolbar = props => {
   );
 };
 
-
 EnhancedTableToolbar.propTypes = {
   classes: PropTypes.object.isRequired,
   numSelected: PropTypes.number.isRequired,
@@ -196,31 +192,37 @@ const styles = theme => ({
     width: '100%',
     marginTop: theme.spacing.unit * 3,
   },
+  table: {
+    minWidth: 1020,
+  },
   tableWrapper: {
     overflowX: 'auto',
   },
 });
 
-
 class EnhancedTable extends React.Component {
-  constructor(props){
-    super(props);
-    this.state = {
-      order: 'asc',
-      orderBy: 'foodName',
-      selectedItems: [],
-      selected: [],
-      data: [],
-      page: 0,
-      rowsPerPage: 5,
-      addAction:false,
-    };
-    this.handleRequestSort = this.handleRequestSort.bind(this);
-    this.handleSelectAllClick = this.handleSelectAllClick.bind(this);
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChangePage = this.handleChangePage.bind(this);
-    this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
-  }
+  state = {
+    order: 'asc',
+    orderBy: 'calories',
+    selected: [],
+    data: [
+      createData('Cupcake', 305, 3.7, 67, 4.3),
+      createData('Donut', 452, 25.0, 51, 4.9),
+      createData('Eclair', 262, 16.0, 24, 6.0),
+      createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+      createData('Gingerbread', 356, 16.0, 49, 3.9),
+      createData('Honeycomb', 408, 3.2, 87, 6.5),
+      createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+      createData('Jelly Bean', 375, 0.0, 94, 0.0),
+      createData('KitKat', 518, 26.0, 65, 7.0),
+      createData('Lollipop', 392, 0.2, 98, 0.0),
+      createData('Marshmallow', 318, 0, 81, 2.0),
+      createData('Nougat', 360, 19.0, 9, 37.0),
+      createData('Oreo', 437, 18.0, 63, 4.0),
+    ],
+    page: 0,
+    rowsPerPage: 5,
+  };
 
   handleRequestSort = (event, property) => {
     const orderBy = property;
@@ -229,6 +231,7 @@ class EnhancedTable extends React.Component {
     if (this.state.orderBy === property && this.state.order === 'desc') {
       order = 'asc';
     }
+
     this.setState({ order, orderBy });
   };
 
@@ -241,11 +244,9 @@ class EnhancedTable extends React.Component {
   };
 
   handleClick = (event, id) => {
-    const { selected,selectedItems } = this.state;
+    const { selected } = this.state;
     const selectedIndex = selected.indexOf(id);
     let newSelected = [];
-
-   // console.log(selectedItem[0]);
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -259,42 +260,9 @@ class EnhancedTable extends React.Component {
         selected.slice(selectedIndex + 1),
       );
     }
-    this.setState({ selected: newSelected});
 
-
-    var selectedItem = this.state.data.filter(function (elem) {
-        return elem.id === id;
-    });
-    // const selectedItemIdx = selectedItems.indexOf(selectedItem);
-    const selectedItemIdx = selectedItems.map(function(e) { return e.id; }).indexOf(id);
-
-    let newSelectedItem = [] 
-    if (selectedItemIdx === -1) {
-      newSelectedItem = newSelectedItem.concat(selectedItems, selectedItem);
-    } else if (selectedItemIdx === 0) {
-      newSelectedItem = newSelectedItem.concat(selectedItems.slice(1));
-    } else if (selectedItemIdx === selected.length - 1) {
-      newSelectedItem = newSelectedItem.concat(selectedItems.slice(0, -1));
-    } else if (selectedItemIdx > 0) {
-      newSelectedItem = newSelectedItem.concat(
-        selectedItems.slice(0, selectedItemIdx),
-        selectedItems.slice(selectedItemIdx + 1),
-      );
-    }
-    // console.log('selectItenIdx', selectedItemIdx, newSelectedItem);
-    this.setState({ selectedItems: newSelectedItem});
+    this.setState({ selected: newSelected });
   };
-
-
-  // handleAddItem(id){
-  //   var selectedItem = this.state.data.filter(function (elem) {
-  //       return elem.id === id;
-  //   });
-  //   console.log("selectedItem: ", selectedItem);
-  //   this.setState({selected: selectedItem});
-  // }
-
-
 
   handleChangePage = (event, page) => {
     this.setState({ page });
@@ -306,25 +274,14 @@ class EnhancedTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-  componentWillReceiveProps(props) {
-    const { tableData } = this.props;
-    if (props.tableData.length !== tableData.length) {
-       var datas = props.tableData.map((item)=>{
-        return createData(item.foodName,item.fiberUnit, item.fiberTotal )
-        })
-      this.setState({data:datas});
-    }
-  }
   render() {
-    const { classes,getSelectedItems } = this.props;
-    const { data, order, orderBy, selected, selectedItems, rowsPerPage, page } = this.state;
+    const { classes } = this.props;
+    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
-      <div>
-      <h1>selected: {this.state.selected.name}</h1>
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} selectedId={selected} selectedItems={selectedItems} getSelectedItems={getSelectedItems} />
+        <EnhancedTableToolbar numSelected={selected.length} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead
@@ -354,10 +311,12 @@ class EnhancedTable extends React.Component {
                         <Checkbox checked={isSelected} />
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        {n.foodName}
+                        {n.name}
                       </TableCell>
-                      <TableCell align="right">{n.fiberUnit}</TableCell>
-                      <TableCell align="right">{n.fiberTotal}</TableCell>
+                      <TableCell align="right">{n.calories}</TableCell>
+                      <TableCell align="right">{n.fat}</TableCell>
+                      <TableCell align="right">{n.carbs}</TableCell>
+                      <TableCell align="right">{n.protein}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -385,7 +344,6 @@ class EnhancedTable extends React.Component {
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
       </Paper>
-      </div>
     );
   }
 }

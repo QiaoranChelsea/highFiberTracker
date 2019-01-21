@@ -4,10 +4,14 @@ import InputBase from '@material-ui/core/InputBase';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
-import GetFiberAmount from './getFiberAmount'
+// import GetFiberAmount from './getFiberAmount';
+// import SearchTable from './searchTable';
+
+// import Grid from '@material-ui/core/Grid';
+import axios from 'axios';
 
 
-import Grid from '@material-ui/core/Grid';
+const APIKey= "eb121QN3xOm3Uw9O94P21n1MaWFIDxNXdTgifYR3";
 
 
 function styled(Component) {
@@ -42,14 +46,67 @@ class SearchForm extends Component {
       searchFlag:false,
       foodName:'',
       servingSize:'',
+      nameFiberList:[],
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.getFiberValue = this.getFiberValue.bind(this);
+
   }
 
+    // get Food from user and perfrom search API in Composition Database
+  getFiberValue(foodName,servingSize = 1 ){
+    console.log(foodName);
+    const fiberID = "291"
+    if(foodName){
+       // get ndbno based on food name 
+       axios.get(`https://api.nal.usda.gov/ndb/search/?format=json&q=${foodName}&sort=n&max=50&offset=0&api_key=${APIKey}`)
+      .then((res)=>{
+        const items = res.data.list.item;
+        const numbers = items.map((item) => item.ndbno );
+        return numbers;
+      })
+      .then((numbers) =>{
+        const promises = numbers.map((ndbno) => {
+            let url = `https://api.nal.usda.gov/ndb/reports/?ndbno=${ndbno}&type=b&format=json&api_key=${APIKey}`
+            return axios.get(url)
+            .then((res)=>{
+              const name = res.data.report.food.name;
+              const nutrients = res.data.report.food.nutrients;
+              var fibers= nutrients.filter(function (elem) {
+                return elem.nutrient_id === fiberID;
+              });
+              if (fibers === undefined || fibers.length === 0 || name === undefined) {
+                this.setState({
+                  nameFiberList: [...this.state.nameFiberList, {foodName: name.split(",")[0],fiberUnit: 0, fiberTotal: 0}]
+                });
+              }
+              else{
+                this.setState({
+                  nameFiberList: [...this.state.nameFiberList, {foodName: name.split(",")[0],fiberUnit: fibers[0].value, fiberTotal: fibers[0].value * servingSize}]
+                });
+
+                
+              }
+            })
+        })
+        return Promise.all(promises)
+    })
+      .then(()=>{
+        if(this.state.nameFiberList.length){
+          return this.props.getSearchTableData(this.state.nameFiberList);
+        }
+          })
+      .catch(function (error) {
+          console.log(error);
+      });
+    }
+   }
 
   handleSubmit(event) {
-    alert('Food name: ' + this.state.foodName + ' servingSize:' + this.state.servingSize);
+    console.log('click==> Food name: ' + this.state.foodName + ' servingSize:' + this.state.servingSize);
+    this.getFiberValue(this.state.foodName, this.state.servingSize);
+
     event.preventDefault();
   }
   
@@ -60,41 +117,23 @@ class SearchForm extends Component {
     });
   };
 
+
+
   render() {
     return(
       <div>
-        <Grid item xs={6}  >
-        {/*
-              {this.state.searchFlag && this.state.items ? <div>{this.state.items.map((item,index) => (
-                      <li key={index}>{item.group}, {item.ndbno}, {item.name}</li>
-                  ))} </div>: <p>Nothing found, please enter a food name</p>
-              } 
-        */}
-          <GetFiberAmount foodName = {this.state.foodName} servingSize = {this.state.servingSize}/>      
-        </Grid>
-        
-       <form onSubmit={this.handleSubmit}>
-         <MyInputBase type="text" name="foodName" placeholder="food name" onChange={this.handleChange('foodName')}/>
-         <MyInputBase type="text" name="servingSize" placeholder="serving size(g)" onChange={this.handleChange('servingSize')} />
+       <form style={{marginTop:"30px" }} onSubmit={this.handleSubmit} >
+         <MyInputBase type="text" name="foodName" placeholder="food name" value={this.state.foodName} onChange={this.handleChange('foodName')}/>
+         <MyInputBase type="text" name="servingSize" placeholder="serving size(g)" value={this.state.servingSize} onChange={this.handleChange('servingSize')} />
          <Button type= "submit" value="Submit">Submit</Button>
        </form>
-
+       {this.state.nameFiberList.length > 0 ? <h1>{this.state.nameFiberList[0].foodName}</h1> : <h1>enter sth</h1>}
       </div>
 
     
     )
   }
 }
-// const SearchForm = (props)=> {
-// 	return (
-// 		<form >
-// 			<MyInputBase type="text" name="foodName" placeholder="food name" onChange={props.getFood}/>
-//       <MyInputBase type="text" name="servingSize" placeholder="serving size(g)"/>
-// 			<Button>Submit</Button>
-// 		</form>
-// 	)
 
-
-// }
 
 export default SearchForm;

@@ -1,30 +1,33 @@
 import React, {Component} from 'react'
 import axios from 'axios';
+import SearchTable from './searchTable';
 
 const APIKey= "eb121QN3xOm3Uw9O94P21n1MaWFIDxNXdTgifYR3";
 
 
 class GetFiberValue extends Component{
-
 	constructor(props) {
     super(props);
     this.state = {
     	items:null,
     	nameFiberList:[],
     	numbers:[],
+
     }
     this.getFiberValue = this.getFiberValue.bind(this);
   }
 
-  componentDidMount() {
-
-  }
 
   componentWillReceiveProps(props) {
 	  const { foodName, servingSize } = this.props;
-	  if (props.foodName !== foodName ||  props.servingSize !=  servingSize ) {
+	  if (props.foodName !== foodName ||  props.servingSize !==  servingSize ) {
 	    this.getFiberValue(props.foodName, props.servingSize);
 	  }
+	  else{
+	  	console.log("Please enter foodName and servingSize ");
+	  }
+
+
 	}
 
 	// get Food from user and perfrom search API in Composition Database
@@ -49,20 +52,25 @@ class GetFiberValue extends Component{
             	var fibers= nutrients.filter(function (elem) {
 							  return elem.nutrient_id === fiberID;
 							});
-							if (fibers === undefined || fibers.length == 0 || name == undefined) {
-									console.log("request name or fiber is undefined");
-							    return 0
+							if (fibers === undefined || fibers.length === 0 || name === undefined) {
+								this.setState({
+								  nameFiberList: [...this.state.nameFiberList, {name: name.split(",")[0],fiberValue: 0, fiberTotal: 0}]
+								});
 							}
 				     	else{
 								this.setState({
 								  nameFiberList: [...this.state.nameFiberList, {name: name.split(",")[0],fiberValue: fibers[0].value, fiberTotal: fibers[0].value * servingSize}]
-								})
+								});
+
 				     		
 				     	}
             })
         })
         return Promise.all(promises)
-			})
+		})
+	   	.then(()=>{
+	   		return this.props.getSearchTableData(this.state.nameFiberList);
+	   	})
 	    .catch(function (error) {
 	        console.log(error);
 	    });
@@ -73,10 +81,6 @@ class GetFiberValue extends Component{
   	return (
   		<div>
   		  <h1> name | fiberValue </h1>
-				<ul> {this.state.nameFiberList.map((item,index) => (
-                      <li key={index}>{item.name}, {item.fiberValue}, {item.fiberTotal}</li>
-              ))}  
-				</ul>
 
   		</div>
   	)
