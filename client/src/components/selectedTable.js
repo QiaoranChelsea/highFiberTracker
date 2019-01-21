@@ -312,12 +312,14 @@ class EnhancedTable extends React.Component {
 
   componentWillReceiveProps(props) {
     const { tableData } = this.props;
-    if (props.tableData.length !== tableData.length) {
-       var datas = props.tableData.map((item)=>{
-        return createData(item.foodName,item.fiberUnit, item.fiberTotal )
-        })
-      this.setState({data:datas});
-    }
+    console.log('in selectedTable:', props.tableData !== tableData);
+
+     var datas = props.tableData.map((item)=>{
+      return createData(item.foodName,item.fiberUnit, item.fiberTotal )
+      })
+    const newData = this.state.data.concat(datas);
+    this.setState({data:newData});
+
   }
   render() {
     const { classes } = this.props;

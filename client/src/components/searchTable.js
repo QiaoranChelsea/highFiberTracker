@@ -267,7 +267,7 @@ class EnhancedTable extends React.Component {
     });
     // const selectedItemIdx = selectedItems.indexOf(selectedItem);
     const selectedItemIdx = selectedItems.map(function(e) { return e.id; }).indexOf(id);
-
+    
     let newSelectedItem = [] 
     if (selectedItemIdx === -1) {
       newSelectedItem = newSelectedItem.concat(selectedItems, selectedItem);

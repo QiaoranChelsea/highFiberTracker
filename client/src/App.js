@@ -1,6 +1,5 @@
 // client/src/App.js
 import React, { Component } from "react";
-// import axios from 'axios';
 import "./App.css";
 import SearchForm from './components/searchForm'
 import SearchTable from './components/searchTable';
@@ -42,12 +41,6 @@ class App extends Component {
     });
 
   }
-  // componentDidUpdate(prevProps, prevState) {
-  //   if (this.state.searchTableData !== prevState.searchTableData) {
-  //     this.props.getSearchTableData(this.state.searchTableData);
-  //   }
-  // }
-
 
 
   render() {
@@ -68,7 +61,7 @@ class App extends Component {
         </Grid>
 
         <Grid item xs={6}>
-          <SelectedTable tableData={this.state.SelectedItems}/>
+          <SelectedTable tableData={this.state.SelectedItems} />
 
         </Grid>
 
@@ -81,16 +74,6 @@ class App extends Component {
 
 	  </div>
 
-    	
-
-{/*
-      // {this.state.searchTableData.length > 0 ? <ul> {this.state.searchTableData.map((item,index) => (
-      //                 <li key={index}>{item.name}, {item.fiberValue}, {item.fiberTotal}</li>
-      //         ))} 
-      // </ul> : <h1>loading</h1>
-      // } 
-
-*/}
 	  </div>
 
 	  
