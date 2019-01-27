@@ -68,7 +68,6 @@ class App extends Component {
 
 
       </Grid>
-      <Table/>
 
 
 

@@ -268,7 +268,7 @@ class EnhancedTable extends React.Component {
     });
     // const selectedItemIdx = selectedItems.indexOf(selectedItem);
     const selectedItemIdx = selectedItems.map(function(e) { return e.id; }).indexOf(id);
-
+    console.log("selectedItemIdx",selectedItemIdx);
     let newSelectedItem = [] 
     if (selectedItemIdx === -1) {
       newSelectedItem = newSelectedItem.concat(selectedItems, selectedItem);
@@ -288,11 +288,13 @@ class EnhancedTable extends React.Component {
 
 
   deleteSelectedItems(items){
-    // console.log(selectedItems);
-    const { selectedItems } = this.state;
+    
+    const { selectedItems,selected } = this.state;
+    console.log("in delete item", selectedItems);
+    console.log("in delete select", selected);
 
     selectedItems.map((item)=>{
-      let newData = this.state.data.filter( elem => elem.foodName !== item.foodName ); 
+      let newData = this.state.data.filter( elem => elem.id !== item.id ); 
       this.setState({data:newData})
     });
 
@@ -317,6 +319,7 @@ class EnhancedTable extends React.Component {
      var datas = props.tableData.map((item)=>{
       return createData(item.foodName,item.fiberUnit, item.fiberTotal )
       })
+
     const newData = this.state.data.concat(datas);
     this.setState({data:newData});
 
