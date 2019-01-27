@@ -105,6 +105,7 @@ class SearchForm extends Component {
 
   handleSubmit(event) {
     console.log('click==> Food name: ' + this.state.foodName + ' servingSize:' + this.state.servingSize);
+    this.setState({nameFiberList:[]});
     this.getFiberValue(this.state.foodName, this.state.servingSize);
 
     event.preventDefault();

@@ -15,7 +15,7 @@ class App extends Component {
     super(props)
 
     this.state={
-      searchTableData:[{foodName:"testUName", "fiberUnit": 0, fiberTotal: 0}],
+      searchTableData:[],
       SelectedItems:[],
     }
 
@@ -24,22 +24,28 @@ class App extends Component {
 
   }
   componentDidMount(){
+    this.setState({selectedItems:[]});
   
   }
 
   getSearchTableData(dataFromChild){
-    console.log("dataFromChild:",dataFromChild);
+    // console.log("dataFromChild:",dataFromChild);
     this.setState({
       searchTableData: dataFromChild
     });
+
+    
+
+
   }
 
   getSelectedItems(SelectedItemsFromChild){
-    console.log("SelectedItemsFromChild:",SelectedItemsFromChild);
+    // console.log("SelectedItemsFromChild:",SelectedItemsFromChild);
     this.setState({
       SelectedItems: SelectedItemsFromChild
     });
 
+    // this.setState({selectedItems:[]});
   }
 
 

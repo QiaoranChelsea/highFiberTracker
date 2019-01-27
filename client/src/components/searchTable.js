@@ -167,7 +167,9 @@ let EnhancedTableToolbar = props => {
         {numSelected > 0 ? (
           <Tooltip title="Add">
             <IconButton aria-label="Add" onClick={() => { 
+              // pass data to  selectedtable
               props.getSelectedItems(props.selectedItems);
+              props.handleAddItem();
               // console.log('selected item: '+ props.selectedId); 
               // console.log('selectedItems: ', props.selectedItems);
             }} >
@@ -223,6 +225,7 @@ class EnhancedTable extends React.Component {
     this.handleClick = this.handleClick.bind(this);
     this.handleChangePage = this.handleChangePage.bind(this);
     this.handleChangeRowsPerPage = this.handleChangeRowsPerPage.bind(this);
+    this.handleAddItem = this.handleAddItem.bind(this);
   }
 
   handleRequestSort = (event, property) => {
@@ -289,13 +292,12 @@ class EnhancedTable extends React.Component {
   };
 
 
-  // handleAddItem(id){
-  //   var selectedItem = this.state.data.filter(function (elem) {
-  //       return elem.id === id;
-  //   });
-  //   console.log("selectedItem: ", selectedItem);
-  //   this.setState({selected: selectedItem});
-  // }
+  handleAddItem(){
+    // console.log("in handleAddItem",this.state.selectedItems);
+    this.setState({selectedItems:[]});
+    this.setState({selected:[]});
+    // console.log("in handleAddItem after reset",this.state.selectedItems);
+  }
 
 
 
@@ -311,12 +313,14 @@ class EnhancedTable extends React.Component {
 
   componentWillReceiveProps(props) {
     const { tableData } = this.props;
-    if (props.tableData.length !== tableData.length) {
-       var datas = props.tableData.map((item)=>{
-        return createData(item.foodName,item.fiberUnit, item.fiberTotal )
-        })
-      this.setState({data:datas});
-    }
+    // console.log("tableData in searchTable", tableData);
+
+     var datas = props.tableData.map((item)=>{
+      return createData(item.foodName,item.fiberUnit, item.fiberTotal )
+      })
+    this.setState({data:datas});
+
+    // console.log("in componentWillReceiveProps selectedItems ", this.state.selectedItems);
   }
   render() {
     const { classes,getSelectedItems } = this.props;
@@ -326,7 +330,7 @@ class EnhancedTable extends React.Component {
     return (
       <div>
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} selectedId={selected} selectedItems={selectedItems} getSelectedItems={getSelectedItems} />
+        <EnhancedTableToolbar numSelected={selected.length} selected={selected} selectedItems={selectedItems} getSelectedItems={getSelectedItems} handleAddItem = {this.handleAddItem}/>
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead

@@ -318,7 +318,7 @@ class EnhancedTable extends React.Component {
 
 
     // reset the seletedItem
-    this.setState({numSelected:0});
+    // this.setState({numSelected:0});
     this.setState({selectedItems:[]});
     this.setState({selected:[]});
 
@@ -338,14 +338,21 @@ class EnhancedTable extends React.Component {
 
   componentWillReceiveProps(props) {
     const { tableData } = this.props;
-    console.log('in selectedTable:', props.tableData !== tableData);
+    // console.log('in selectedTable:', props.tableData !== tableData);
+    // console.log('continue:', tableData, props.tableData);
 
-     var datas = props.tableData.map((item)=>{
+    if(props.tableData !== tableData){
+      var datas = props.tableData.map((item)=>{
       return createData(item.foodName,item.fiberUnit, item.fiberTotal )
       })
+      const newData = this.state.data.concat(datas);
+      this.setState({data:newData});
+    }
 
-    const newData = this.state.data.concat(datas);
-    this.setState({data:newData});
+
+
+
+
 
   }
   render() {
