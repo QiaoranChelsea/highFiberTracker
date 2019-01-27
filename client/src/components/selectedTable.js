@@ -245,6 +245,7 @@ class EnhancedTable extends React.Component {
     this.setState({ selected: [] });
   };
 
+
   handleClick = (event, id) => {
     const { selected,selectedItems } = this.state;
     const selectedIndex = selected.indexOf(id);
@@ -270,9 +271,10 @@ class EnhancedTable extends React.Component {
     var selectedItem = this.state.data.filter(function (elem) {
         return elem.id === id;
     });
+
     // const selectedItemIdx = selectedItems.indexOf(selectedItem);
     const selectedItemIdx = selectedItems.map(function(e) { return e.id; }).indexOf(id);
-    console.log("selectedItemIdx",selectedItemIdx);
+    // console.log("selectedItemIdx",selectedItemIdx);
     let newSelectedItem = [] 
     if (selectedItemIdx === -1) {
       newSelectedItem = newSelectedItem.concat(selectedItems, selectedItem);
@@ -293,14 +295,32 @@ class EnhancedTable extends React.Component {
 
   deleteSelectedItems(items){
     
-    const { selectedItems,selected } = this.state;
-    console.log("in delete item", selectedItems);
-    console.log("in delete select", selected);
+    const { selectedItems,selected, numSelected} = this.state;
+    // console.log("in delete item", selectedItems);
+    // console.log("in delete select", selected);
 
-    selectedItems.map((item)=>{
-      let newData = this.state.data.filter( elem => elem.id !== item.id ); 
-      this.setState({data:newData})
-    });
+    // beforeDeleteLen = selectedItems.size()
+    // delete selectedItem in data
+    // selectedItems.map((item)=>{
+    //   let newData = this.state.data.filter( elem => elem.id !== item.id ); 
+    //   this.setState({data:newData})
+    // });
+
+
+    // delete selectedItem in data
+    var newData = this.state.data;
+
+    for (var i in selected){
+      let itemId = selected[i]
+      newData = newData.filter( elem => elem.id !== itemId ); 
+    }
+    this.setState({data:newData});
+
+
+    // reset the seletedItem
+    this.setState({numSelected:0});
+    this.setState({selectedItems:[]});
+    this.setState({selected:[]});
 
   }
 
