@@ -159,7 +159,7 @@ let EnhancedTableToolbar = props => {
           </Typography>
         ) : (
           <Typography variant="h6" id="tableTitle">
-            Select and Add Item You Eat Today 
+            Today's summary: {props.totalFiber}
           </Typography>
         )}
       </div>
@@ -218,6 +218,7 @@ class EnhancedTable extends React.Component {
       page: 0,
       rowsPerPage: 5,
       addAction:false,
+      totalFiber:0
     };
     this.handleRequestSort = this.handleRequestSort.bind(this);
     this.handleSelectAllClick = this.handleSelectAllClick.bind(this);
@@ -296,19 +297,8 @@ class EnhancedTable extends React.Component {
   deleteSelectedItems(items){
     
     const { selectedItems,selected, numSelected} = this.state;
-    // console.log("in delete item", selectedItems);
-    // console.log("in delete select", selected);
-
-    // beforeDeleteLen = selectedItems.size()
-    // delete selectedItem in data
-    // selectedItems.map((item)=>{
-    //   let newData = this.state.data.filter( elem => elem.id !== item.id ); 
-    //   this.setState({data:newData})
-    // });
-
-
-    // delete selectedItem in data
     var newData = this.state.data;
+    // console.log(newData);
 
     for (var i in selected){
       let itemId = selected[i]
@@ -316,11 +306,18 @@ class EnhancedTable extends React.Component {
     }
     this.setState({data:newData});
 
-
-    // reset the seletedItem
-    // this.setState({numSelected:0});
     this.setState({selectedItems:[]});
     this.setState({selected:[]});
+    if(newData.length){
+    let dataFibers = newData.map((elem)=>elem.fiberTotal);
+    let totalFiberAmount = dataFibers.reduce((total,num)=>{return total+num});
+    this.setState({totalFiber: totalFiberAmount});
+    }
+    else{
+          this.setState({totalFiber: 0});
+
+
+    }
 
   }
 
@@ -336,6 +333,14 @@ class EnhancedTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
+
+  caculateTotal(){
+    const {data} = this.state;
+    let dataFibers = data.map((elem)=>elem.fiberTotal);
+    console.log("dataFibers",dataFibers);
+    this.setState({totalFiber: data.length});
+
+  }
   componentWillReceiveProps(props) {
     const { tableData } = this.props;
     // console.log('in selectedTable:', props.tableData !== tableData);
@@ -347,12 +352,15 @@ class EnhancedTable extends React.Component {
       })
       const newData = this.state.data.concat(datas);
       this.setState({data:newData});
+      console.log("newdata",newData);
+
+      let dataFibers = newData.map((elem)=>elem.fiberTotal);
+      let totalFiberAmount = dataFibers.reduce((total,num)=>{return total+num});
+
+      this.setState({totalFiber: totalFiberAmount});
+
+
     }
-
-
-
-
-
 
   }
   render() {
@@ -363,7 +371,7 @@ class EnhancedTable extends React.Component {
     return (
       <div>
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} selectedId={selected} selectedItems={selectedItems} deleteSelectedItems={this.deleteSelectedItems} />
+        <EnhancedTableToolbar numSelected={selected.length} selectedId={selected} selectedItems={selectedItems} deleteSelectedItems={this.deleteSelectedItems} totalFiber = {this.state.totalFiber} />
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
             <EnhancedTableHead

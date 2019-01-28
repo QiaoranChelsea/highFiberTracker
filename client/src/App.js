@@ -29,7 +29,7 @@ class App extends Component {
   }
 
   getSearchTableData(dataFromChild){
-    // console.log("dataFromChild:",dataFromChild);
+    console.log("dataFromChild:",dataFromChild);
     this.setState({
       searchTableData: dataFromChild
     });

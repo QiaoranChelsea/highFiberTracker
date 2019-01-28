@@ -12,7 +12,7 @@ import axios from 'axios';
 
 
 const APIKey= "eb121QN3xOm3Uw9O94P21n1MaWFIDxNXdTgifYR3";
-
+const APIKey2 ="RHljFAKu5qSS9IdDEWw5zRo8oEgQmTN3HAQhTa4m";
 
 function styled(Component) {
   return (style, options) => {
@@ -60,7 +60,7 @@ class SearchForm extends Component {
     const fiberID = "291"
     if(foodName){
        // get ndbno based on food name 
-       axios.get(`https://api.nal.usda.gov/ndb/search/?format=json&q=${foodName}&sort=n&max=50&offset=0&api_key=${APIKey}`)
+       axios.get(`https://api.nal.usda.gov/ndb/search/?format=json&q=${foodName}&sort=n&max=50&offset=0&api_key=${APIKey2}`)
       .then((res)=>{
         const items = res.data.list.item;
         const numbers = items.map((item) => item.ndbno );
@@ -68,9 +68,10 @@ class SearchForm extends Component {
       })
       .then((numbers) =>{
         const promises = numbers.map((ndbno) => {
-            let url = `https://api.nal.usda.gov/ndb/reports/?ndbno=${ndbno}&type=b&format=json&api_key=${APIKey}`
+            let url = `https://api.nal.usda.gov/ndb/reports/?ndbno=${ndbno}&type=b&format=json&api_key=${APIKey2}`
             return axios.get(url)
             .then((res)=>{
+              // console.log(res);
               const name = res.data.report.food.name;
               const nutrients = res.data.report.food.nutrients;
               var fibers= nutrients.filter(function (elem) {
@@ -78,12 +79,12 @@ class SearchForm extends Component {
               });
               if (fibers === undefined || fibers.length === 0 || name === undefined) {
                 this.setState({
-                  nameFiberList: [...this.state.nameFiberList, {foodName: name.split(",")[0],fiberUnit: 0, fiberTotal: 0}]
+                  nameFiberList: [...this.state.nameFiberList, {foodName: name.split(","),fiberUnit: 0, fiberTotal: 0}]
                 });
               }
               else{
                 this.setState({
-                  nameFiberList: [...this.state.nameFiberList, {foodName: name.split(",")[0],fiberUnit: fibers[0].value, fiberTotal: fibers[0].value * servingSize}]
+                  nameFiberList: [...this.state.nameFiberList, {foodName: name.split(","),fiberUnit: fibers[0].value, fiberTotal: fibers[0].value * servingSize}]
                 });
 
                 
@@ -119,12 +120,11 @@ class SearchForm extends Component {
   };
 
 
-
   render() {
     return(
       <div>
        <form style={{marginTop:"30px" }} onSubmit={this.handleSubmit} >
-         <MyInputBase type="text" name="foodName" placeholder="food name" value={this.state.foodName} onChange={this.handleChange('foodName')}/>
+         <MyInputBase type="text" name="foodName" placeholder="food name/UPC number" value={this.state.foodName} onChange={this.handleChange('foodName')}/>
          <MyInputBase type="text" name="servingSize" placeholder="serving size(g)" value={this.state.servingSize} onChange={this.handleChange('servingSize')} />
          <Button type= "submit" value="Submit">Submit</Button>
        </form>
