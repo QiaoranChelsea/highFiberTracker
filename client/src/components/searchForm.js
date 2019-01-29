@@ -4,6 +4,8 @@ import InputBase from '@material-ui/core/InputBase';
 import { withStyles } from '@material-ui/core/styles';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 // import GetFiberAmount from './getFiberAmount';
 // import SearchTable from './searchTable';
 
@@ -50,12 +52,21 @@ class SearchForm extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+  }
+
+  componentWillMount() {
+    // this.doAThing = this.doAThing.bind(this);
     this.getFiberValue = this.getFiberValue.bind(this);
 
+    this.state = {
+      loading: false
+    };
   }
 
     // get Food from user and perfrom search API in Composition Database
   getFiberValue(foodName,servingSize = 1 ){
+    this.setState({loading:true});
     console.log(foodName);
     const fiberID = "291"
     if(foodName){
@@ -95,6 +106,7 @@ class SearchForm extends Component {
     })
       .then(()=>{
         if(this.state.nameFiberList.length){
+          this.setState({loading:false});
           return this.props.getSearchTableData(this.state.nameFiberList);
         }
           })
@@ -108,7 +120,6 @@ class SearchForm extends Component {
     console.log('click==> Food name: ' + this.state.foodName + ' servingSize:' + this.state.servingSize);
     this.setState({nameFiberList:[]});
     this.getFiberValue(this.state.foodName, this.state.servingSize);
-
     event.preventDefault();
   }
   
@@ -123,6 +134,8 @@ class SearchForm extends Component {
   render() {
     return(
       <div>
+        {this.state.loading ? <CircularProgress/> : <h3> search a fiber amount</h3> }
+
        <form style={{marginTop:"30px" }} onSubmit={this.handleSubmit} >
          <MyInputBase type="text" name="foodName" placeholder="food name/UPC number" value={this.state.foodName} onChange={this.handleChange('foodName')}/>
          <MyInputBase type="text" name="servingSize" placeholder="serving size(g)" value={this.state.servingSize} onChange={this.handleChange('servingSize')} />
