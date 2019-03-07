@@ -61,6 +61,8 @@ class EnhancedTableHead extends React.Component {
     this.props.onRequestSort(event, property);
   };
 
+
+
   render() {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount } = this.props;
 
@@ -312,10 +314,12 @@ class EnhancedTable extends React.Component {
     let dataFibers = newData.map((elem)=>elem.fiberTotal);
     let totalFiberAmount = dataFibers.reduce((total,num)=>{return total+num});
     this.setState({totalFiber: totalFiberAmount});
+    this.props.getTodaysTotal(totalFiberAmount || 0);
+
     }
     else{
           this.setState({totalFiber: 0});
-
+          this.props.getTodaysTotal(0);
 
     }
 
@@ -338,11 +342,13 @@ class EnhancedTable extends React.Component {
     const {data} = this.state;
     let dataFibers = data.map((elem)=>elem.fiberTotal);
     console.log("dataFibers",dataFibers);
-    this.setState({totalFiber: data.length});
-
+    let totalFiberAmount = data.length;
+    this.setState({totalFiber: totalFiberAmount});
+    this.props.getTodaysTotal(totalFiberAmount || 0);
   }
+
   componentWillReceiveProps(props) {
-    const { tableData } = this.props;
+    const { tableData, getTodaysTotal} = this.props;
     // console.log('in selectedTable:', props.tableData !== tableData);
     // console.log('continue:', tableData, props.tableData);
 
@@ -358,9 +364,12 @@ class EnhancedTable extends React.Component {
       let totalFiberAmount = dataFibers.reduce((total,num)=>{return total+num});
 
       this.setState({totalFiber: totalFiberAmount});
-
+      console.log("total fiber in will receive props", this.state.totalFiber);
+      this.props.getTodaysTotal(totalFiberAmount || 0);
 
     }
+
+
 
   }
   render() {

@@ -52,12 +52,11 @@ class SearchForm extends Component {
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-
+    this.getFiberValue = this.getFiberValue.bind(this);
   }
 
   componentWillMount() {
     // this.doAThing = this.doAThing.bind(this);
-    this.getFiberValue = this.getFiberValue.bind(this);
 
     this.state = {
       loading: false
@@ -137,8 +136,8 @@ class SearchForm extends Component {
         {this.state.loading ? <CircularProgress/> : <h3> search a fiber amount</h3> }
 
        <form style={{marginTop:"30px" }} onSubmit={this.handleSubmit} >
-         <MyInputBase type="text" name="foodName" placeholder="food name/UPC number" value={this.state.foodName} onChange={this.handleChange('foodName')}/>
-         <MyInputBase type="text" name="servingSize" placeholder="serving size(g)" value={this.state.servingSize} onChange={this.handleChange('servingSize')} />
+         <MyInputBase type="text" name="foodName" placeholder="food name/UPC number" value={this.state.foodName || ""} onChange={this.handleChange('foodName')}/>
+         <MyInputBase type="text" name="servingSize" placeholder="serving size(g)" value={this.state.servingSize || 1} onChange={this.handleChange('servingSize')} />
          <Button type= "submit" value="Submit">Submit</Button>
        </form>
       </div>
