@@ -109,12 +109,8 @@ class SignUp extends Component {
     this.setState({
       isLoading: true,
     });
-
-
-
     // post req to backend 
-
-    fetch('/api/account/signup', { 
+    fetch('/account/signup', { 
       method: 'POST' ,
       headers:{
         'Content-Type':'application/json'
@@ -163,7 +159,7 @@ class SignUp extends Component {
 
     // post req to backend 
 
-    fetch('/api/account/signin', { 
+    fetch('/account/signin', { 
       method: 'POST' ,
       headers:{
         'Content-Type':'application/json'
@@ -205,7 +201,7 @@ class SignUp extends Component {
       const{token} = obj;
 
       // verify token
-      fetch('/api/account/logout?token='+token)
+      fetch('/account/logout?token='+token)
         .then(res => res.json())
         .then(json => {
           if(json.success){
