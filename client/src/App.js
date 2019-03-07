@@ -7,7 +7,6 @@ import SelectedTable from './components/selectedTable';
 
 import Grid from '@material-ui/core/Grid';
 // import Table from './components/table';
-import SignUp from './components/SignUp'
 import {MAIN_THEME_COLOR} from './value';
 
 
