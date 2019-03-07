@@ -8,6 +8,8 @@ import SelectedTable from './components/selectedTable';
 import Grid from '@material-ui/core/Grid';
 // import Table from './components/table';
 import SignUp from './components/SignUp'
+import {MAIN_THEME_COLOR} from './value';
+
 
 class App extends Component {
   constructor(props) {
@@ -76,7 +78,7 @@ class App extends Component {
         <p className="App-intro">{this.state.data}</p>
 
   	    <div className="App">
-  	    	<header className="App-header">
+  	    	<header className="App-header" >
             <h1>Today's Total: {this.state.todaysTotal || 0}</h1>
           </header>
           <SearchForm getSearchTableData={this.getSearchTableData}  />

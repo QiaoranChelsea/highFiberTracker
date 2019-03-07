@@ -8,8 +8,6 @@ function AppRouter() {
   return (
     <Router>
       <div>
-        <nav>
-        </nav>
         <NavBar/>
         <Route path="/" exact component={App} />
         <Route path="/signup/" component={SignUp} />
