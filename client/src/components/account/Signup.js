@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import 'whatwg-fetch';
 import {getFromStorage,
-        setInStorage } from './utils/storage'
+        setInStorage } from '../utils/storage'
 
-class SignUp extends Component {
+class Signup extends Component {
   constructor(props) {
     super(props);
 
@@ -41,7 +41,7 @@ class SignUp extends Component {
       const{token} = obj;
 
       // verify token
-      fetch('/account/verify?token='+token)
+      fetch('/api/account/verify?token='+token)
         .then(res => res.json())
         .then(json => {
           if(json.success){
@@ -221,32 +221,9 @@ class SignUp extends Component {
     }
 
   }
-      /*
-    fetch('/api/counters')
-      .then(res => res.json())
-      .then(json => {
-        this.setState({
-          counters: json
-        });
-      });
-    */
 
-    /*
-    fetch('/api/counters', { method: 'POST' })
-      .then(res => res.json())
-      .then(json => {
-        let data = this.state.counters;
-        data.push(json);
-
-        this.setState({
-          counters: data
-        });
-      });
-      */
-  
-
+ 
   render() {
-
     const{
       isLoading,
       token,
@@ -330,12 +307,11 @@ class SignUp extends Component {
       <div>
         <p>Account </p>
         <button onClick ={this.logout}> Log Out</button>
-
       </div>
 
     );
   }
 }
 
-export default SignUp;
+export default Signup;
 
