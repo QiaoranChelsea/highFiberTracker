@@ -1,0 +1,16 @@
+
+# Node stuff
+**/node_modules
+.npm
+.node_repl_history
+.lock-wscript
+
+# OS stuff
+Desktop.ini
+ehthumbs.db
+Thumbs.db
+$RECYCLE.BIN/
+._*
+.DS_Store
+.Spotlight-V100
+.Trashes

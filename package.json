@@ -1,0 +1,23 @@
+{
+  "name": "highfibertracker",
+  "version": "1.0.0",
+  "description": "To do: 1. delete item on just selectone, not the same item.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/QiaoranChelsea/highFiberTracker.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/QiaoranChelsea/highFiberTracker/issues"
+  },
+  "homepage": "https://github.com/QiaoranChelsea/highFiberTracker#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
+}
