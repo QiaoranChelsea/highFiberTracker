@@ -241,16 +241,12 @@ class EnhancedTable extends React.Component {
       }
   }
 
-  componentWillReceiveProps(props) {
-    const { isLogin ,token} =props;
-    console.log("islogin in view", isLogin);
-    // console.log("tableData in searchTable", tableData);
 
-    this.setState({
-      isLogin:isLogin,
-      token:token});
-
-    // console.log("in componentWillReceiveProps selectedItems ", this.state.selectedItems);
+  componentDidUpdate(prevProps) {
+    if(this.props.token != prevProps.token){
+      this.setState({
+        token:this.props.token});
+    }
   }
 
 

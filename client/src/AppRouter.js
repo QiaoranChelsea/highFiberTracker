@@ -52,8 +52,8 @@ class AppRouter extends Component {
 	    const obj = getFromStorage('the_main_app');
 
 	    if(obj && obj.token){
-	      const{token} = obj;
-
+	      const{token,userId} = obj;
+	      console.log("userId in sotrage in Approut", userId);
 	      // verify token
 	      fetch('/account/verify?token='+token)
 	        .then(res => res.json())
@@ -61,6 +61,7 @@ class AppRouter extends Component {
 	          if(json.success){
 	            this.setState({
 	              token, 
+	              userId,
 	              isLoading: false,
 	              isLogin:true 
 	            });
@@ -84,17 +85,18 @@ class AppRouter extends Component {
 	      isLoading: true
 	    });
 	    const obj = getFromStorage('the_main_app');
-	    if(obj && obj.token){
+	    if(obj && obj.token ){
 	      const{token} = obj;
 
 	      // verify token
-	      fetch('/account/logout?token='+token)
+	      fetch('/account/logout?token='+ token)
 	        .then(res => res.json())
 	        .then(json => {
 
 	          if(json.success){
 	            this.setState({
 	              token:'', 
+
 	              isLoading: false,
 	              isLogin:false
 	            });
@@ -120,7 +122,8 @@ class AppRouter extends Component {
   	}
 
 	render(){
-	  console.log("islogin in app router", this.state.isLogin, this.state.token);
+	  console.log("token in app router", this.state.token);
+	  console.log("userId in app router", this.state.userId);
 
 	  return (
 	    <Router>
@@ -148,7 +151,7 @@ class AppRouter extends Component {
 		      </AppBar>
 		    </div>
 
-	        <Route path="/" exact render={()=><App  isLogin={this.state.isLogin} token = {this.state.token}/>} />
+	        <Route path="/" exact render={()=><App  isLogin={this.state.isLogin} token = {this.state.token}/>} userId = {this.state.userId} />
 	        <Route path="/signup/" render={()=><AccountDefault  getToken={this.getToken}/>} />
 	        <Route path="/viewlog/" render={()=><ViewLog  token = {this.state.token}/>} />
 

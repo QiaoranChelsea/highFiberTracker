@@ -24,7 +24,8 @@ class App extends Component {
       data:null,
       todaysTotal:0,
       isLogin:false,
-      token:''
+      token:'',
+      userId:''
     }
 
     this.getSearchTableData = this.getSearchTableData.bind(this);
@@ -42,7 +43,7 @@ class App extends Component {
       const obj = getFromStorage('the_main_app');
 
       if(obj && obj.token){
-        const{token} = obj;
+        const{token,userId} = obj;
 
         // verify token
         fetch('/account/verify?token='+token)
@@ -51,6 +52,7 @@ class App extends Component {
             if(json.success){
               this.setState({
                 token, 
+                userId,
                 isLoading: false,
                 isLogin:true 
               });
@@ -73,7 +75,17 @@ class App extends Component {
     if(this.props.token != prevProps.token){
       this.setState({
         token:this.props.token});
+      console.log("token in APP update:", this.props.token);
+
     }
+
+    if(this.props.userId != prevProps.userId){
+      this.setState({
+        userId:this.props.userId});
+      console.log("userId in APP update:", this.props.userId);
+
+    }
+
   }
   //   // const { isLogin ,token} =prevProps;
   //   // console.log("islogin in APp", isLogin);
@@ -110,7 +122,7 @@ class App extends Component {
   }
 
   handleClick(){
-    const {todaysTotal,token} = this.state;
+    const {todaysTotal,token,userId} = this.state;
     console.log("todays totle is", todaysTotal);
 
     // post req to backend 
@@ -120,7 +132,7 @@ class App extends Component {
         'Content-Type':'application/json'
       },
       body: JSON.stringify({
-        userId:token,
+        userId:userId,
         fiberAmount: todaysTotal
       })})
     .then(res=>res.json())
