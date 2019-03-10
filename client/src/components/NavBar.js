@@ -23,10 +23,13 @@ const styles = {
   },
 };
 
+
+
+
 function NavBar(props) {
-  const { classes } = props;
+  const { classes, isLogin } = props;
   return (
-    <div className={classes.root}>
+    <div className={classes.root} >
       <AppBar position="static"  style={{ background: "#649c42" }}>
         <Toolbar>
           {/*<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
@@ -36,8 +39,11 @@ function NavBar(props) {
             <Link to="/" style={{ textDecoration: 'none' ,color: 'white'}}>High Fiber Tracker</Link> 
 
           </Typography>
-           <Link to="/signup/" style={{ textDecoration: 'none' ,color: 'white'}}> <Button color="inherit"> Sign In</Button></Link> 
-           <Link  to="/signup/" style={{ textDecoration: 'none',color: 'white' }}><Button color="inherit"> Sign Up</Button></Link>
+          (isLogin) ? (<Link to="/" style={{ textDecoration: 'none' ,color: 'white'}}> <Button color="inherit"> logout</Button></Link> )
+           : (<div>
+             <Link to="/signup/" style={{ textDecoration: 'none' ,color: 'white'}}> <Button color="inherit"> Sign In</Button></Link> 
+             <Link  to="/signup/" style={{ textDecoration: 'none',color: 'white' }}><Button color="inherit"> Sign Up</Button></Link>
+           </div>)
         </Toolbar>
       </AppBar>
     </div>
