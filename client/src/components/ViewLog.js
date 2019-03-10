@@ -20,6 +20,8 @@ import FilterListIcon from '@material-ui/icons/FilterList';
 import { lighten } from '@material-ui/core/styles/colorManipulator';
 import {getFromStorage,
         setInStorage } from './utils/storage';
+import CircularProgress from '@material-ui/core/CircularProgress';
+
 
 let counter = 0;
 function createData(date, fiberTotal) {
@@ -209,7 +211,8 @@ class EnhancedTable extends React.Component {
     page: 0,
     rowsPerPage: 5,
     token:'',
-    userId:''
+    userId:'',
+    isLoading:false
   };
 
   componentDidMount() {
@@ -238,6 +241,10 @@ class EnhancedTable extends React.Component {
 
         });
 
+        this.setState({
+          isLoading:true
+        });
+
         fetch('/fiberlog/getlog?userId='+ userId)
           .then(res => res.json())
           .then(json => {
@@ -245,6 +252,7 @@ class EnhancedTable extends React.Component {
               this.setState({
                 // data: json.fiberAmountArray.map((item) => [item.recordDate, item.fiberAmount])
                 data:json.fiberAmountArray,
+                isLoading:false
               });
               console.log("data from array:",json.fiberAmountArray);
              // console.log("data from log:", json.fiberAmountArray.map((item) => {item.recordDate, item.fiberAmount});
@@ -353,11 +361,15 @@ class EnhancedTable extends React.Component {
 
   render() {
     const { classes } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { data, order, orderBy, selected, rowsPerPage, page,isLoading } = this.state;
     const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
     return (
+      <div>
+      { isLoading ? <CircularProgress style={{marginLeft: '50%', marginTop: '10%'}}/> : (
       <Paper className={classes.root}>
+            
+
         {/*<EnhancedTableToolbar numSelected={selected.length} />*/}
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
@@ -418,7 +430,8 @@ class EnhancedTable extends React.Component {
           onChangePage={this.handleChangePage}
           onChangeRowsPerPage={this.handleChangeRowsPerPage}
         />
-      </Paper>
+      </Paper>)}
+      </div>
     );
   }
 }
