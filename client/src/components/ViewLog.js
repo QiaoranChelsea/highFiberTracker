@@ -68,11 +68,13 @@ class EnhancedTableHead extends React.Component {
       <TableHead>
         <TableRow>
           <TableCell padding="checkbox">
-            <Checkbox
+            {/*<Checkbox
               indeterminate={numSelected > 0 && numSelected < rowCount}
               checked={numSelected === rowCount}
               onChange={onSelectAllClick}
-            />
+              />
+            */}
+            
           </TableCell>
           {rows.map(
             row => (
@@ -188,11 +190,10 @@ EnhancedTableToolbar = withStyles(toolbarStyles)(EnhancedTableToolbar);
 
 const styles = theme => ({
   root: {
-    width: '100%',
+    width: '50%',
+    margin: 'auto',
+
     marginTop: theme.spacing.unit * 3,
-  },
-  table: {
-    minWidth: 1020,
   },
   tableWrapper: {
     overflowX: 'auto',
@@ -242,9 +243,11 @@ class EnhancedTable extends React.Component {
           .then(json => {
             if(json.success){
               this.setState({
-                data: json.fiberAmountArray.map((item) => [item.date, item.fiberTotal])
+                // data: json.fiberAmountArray.map((item) => [item.recordDate, item.fiberAmount])
+                data:json.fiberAmountArray,
               });
-             // console.log("data from log:", json.fiberAmountArray.map((item) => [item.date, item.fiberTotal]));
+              console.log("data from array:",json.fiberAmountArray);
+             // console.log("data from log:", json.fiberAmountArray.map((item) => {item.recordDate, item.fiberAmount});
             }else{
               alert("loading error");
             }
@@ -355,17 +358,17 @@ class EnhancedTable extends React.Component {
 
     return (
       <Paper className={classes.root}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        {/*<EnhancedTableToolbar numSelected={selected.length} />*/}
         <div className={classes.tableWrapper}>
           <Table className={classes.table} aria-labelledby="tableTitle">
-            <EnhancedTableHead
+           <EnhancedTableHead
               numSelected={selected.length}
               order={order}
               orderBy={orderBy}
               onSelectAllClick={this.handleSelectAllClick}
               onRequestSort={this.handleRequestSort}
               rowCount={data.length}
-            />
+            /> 
             <TableBody>
               {stableSort(data, getSorting(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
@@ -382,15 +385,13 @@ class EnhancedTable extends React.Component {
                       selected={isSelected}
                     >
                       <TableCell padding="checkbox">
-                        <Checkbox checked={isSelected} />
+                        {/*<Checkbox checked={isSelected} />*/}
                       </TableCell>
                       <TableCell component="th" scope="row" padding="none">
-                        {n.name}
+                        {n.recordDate}
                       </TableCell>
-                      <TableCell align="right">{n.calories}</TableCell>
-                      <TableCell align="right">{n.fat}</TableCell>
-                      <TableCell align="right">{n.carbs}</TableCell>
-                      <TableCell align="right">{n.protein}</TableCell>
+                      <TableCell align="right">{n.fiberAmount}</TableCell>
+
                     </TableRow>
                   );
                 })}
