@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import 'whatwg-fetch';
 import {getFromStorage,
-        setInStorage } from '../utils/storage'
+        setInStorage } from '../utils/storage';
+import { Redirect } from 'react-router-dom'
+
 
 class AccountDefault extends Component {
   constructor(props) {
@@ -18,7 +20,8 @@ class AccountDefault extends Component {
       signUpFirstName:'',
       signUpLastName:'',
       signUpEmail:'',
-      signUpPassword:''
+      signUpPassword:'',
+      showSignIn:true
     };
 
 
@@ -34,33 +37,32 @@ class AccountDefault extends Component {
 
   }
 
+  // componentDidMount() {
+  //   const obj = getFromStorage('the_main_app');
+  //   if(obj && obj.token){
+  //     const{token} = obj;
 
-  componentDidMount() {
-    const obj = getFromStorage('the_main_app');
-    if(obj && obj.token){
-      const{token} = obj;
+  //     // verify token
+  //     fetch('/account/verify?token='+token)
+  //       .then(res => res.json())
+  //       .then(json => {
+  //         if(json.success){
+  //           this.setState({
+  //             token, 
+  //             isLoading: false
+  //           });
+  //         }else{
+  //           this.setState({
+  //             isLoading: false 
+  //           });
+  //         }
 
-      // verify token
-      fetch('/account/verify?token='+token)
-        .then(res => res.json())
-        .then(json => {
-          if(json.success){
-            this.setState({
-              token, 
-              isLoading: false
-            });
-          }else{
-            this.setState({
-              isLoading: false 
-            });
-          }
+  //     });
+  //   }else{
+  //     this.setState({isLoading: false,});
+  //   }
 
-      });
-    }else{
-      this.setState({isLoading: false,});
-    }
-
-  }
+  // }
 
   onTextBoxChangeSignInEmail(event){
     this.setState({
@@ -181,6 +183,7 @@ class AccountDefault extends Component {
               signUpPassword:'',
               token:json.token,
             });
+            this.props.getToken(json.token);
           }else{
 
             this.setState({
@@ -196,6 +199,7 @@ class AccountDefault extends Component {
     this.setState({
       isLoading: true
     });
+
     const obj = getFromStorage('the_main_app');
     if(obj && obj.token){
       const{token} = obj;
@@ -237,9 +241,9 @@ class AccountDefault extends Component {
       signUpFirstName
     } = this.state;
     console.log(signUpError);
-    if (isLoading){
-      return (<div> <p> loading ... </p></div>)
-    }
+    // if (isLoading){
+    //   return (<div> <p> loading ... </p></div>)
+    // }
 
     if(!token){
       return (
@@ -305,8 +309,8 @@ class AccountDefault extends Component {
 
     return (
       <div>
-        <p>Account </p>
-        <button onClick ={this.logout}> Log Out</button>
+        <p>Sign In Successfully! </p>
+        <Redirect to="/" />
       </div>
 
     );
