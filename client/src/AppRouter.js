@@ -15,7 +15,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import {getFromStorage,
-        setInStorage } from './components/utils/storage'
+        setInStorage } from './components/utils/storage';
+
+import ViewLog from './components/ViewLog';
 
 // const styles = {
 //   root: {
@@ -132,7 +134,11 @@ class AppRouter extends Component {
 		            <Link to="/" style={{ textDecoration: 'none' ,color: 'white'}}>High Fiber Tracker</Link> 
 
 		          </Typography>
-		          {(this.state.token) ? ( <Link to="/" style={{ textDecoration: 'none' ,color: 'white'}}> <Button onClick ={this.logout} color="inherit"> logout</Button></Link>)
+		          {(this.state.token) ? 
+		          	( <div>
+		          		<Link to="/viewlog" style={{ textDecoration: 'none' ,color: 'white'}}> <Button color="inherit"> My Data</Button></Link>
+		          		<Link to="/" style={{ textDecoration: 'none' ,color: 'white'}}> <Button onClick ={this.logout} color="inherit"> Log Out</Button></Link>
+		          	  </div>)
 		           : (<div>
 		             <Link to="/signup/" style={{ textDecoration: 'none' ,color: 'white'}}> <Button color="inherit"> Sign In</Button></Link> 
 		             <Link  to="/signup/" style={{ textDecoration: 'none',color: 'white' }}><Button color="inherit"> Sign Up</Button></Link>
@@ -143,6 +149,8 @@ class AppRouter extends Component {
 
 	        <Route path="/" exact render={()=><App  isLogin={this.state.isLogin} token = {this.state.token}/>} />
 	        <Route path="/signup/" render={()=><AccountDefault  getToken={this.getToken}/>} />
+	        <Route path="/viewlog/" render={()=><ViewLog  token = {this.state.token}/>} />
+
 	      </div>
 	    </Router>
 	  );

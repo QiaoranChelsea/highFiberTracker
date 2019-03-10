@@ -9,7 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
 // import Table from './components/table';
-import {MAIN_THEME_COLOR} from './value';
+
+import {getFromStorage,
+        setInStorage } from './components/utils/storage';
 
 
 class App extends Component {
@@ -31,21 +33,55 @@ class App extends Component {
     this.handleClick = this.handleClick.bind(this);
 
   }
-  componentDidMount(){
-    this.setState({selectedItems:[]});
-  }
+  // componentDidMount(){
+  //   this.setState({selectedItems:[]});
+  // }
+  componentDidMount() {
+        this.setState({selectedItems:[]});
 
-  componentWillReceiveProps(props) {
-    const { isLogin ,token} =props;
-    console.log("islogin in APp", isLogin);
-    // console.log("tableData in searchTable", tableData);
+      const obj = getFromStorage('the_main_app');
 
-    this.setState({
-      isLogin:isLogin,
-      token:token});
+      if(obj && obj.token){
+        const{token} = obj;
 
-    // console.log("in componentWillReceiveProps selectedItems ", this.state.selectedItems);
-  }
+        // verify token
+        fetch('/account/verify?token='+token)
+          .then(res => res.json())
+          .then(json => {
+            if(json.success){
+              this.setState({
+                token, 
+                isLoading: false,
+                isLogin:true 
+              });
+            }else{
+              this.setState({
+                isLoading: false,
+                isLogin:false 
+              });
+            }
+
+        });
+      }else{
+        this.setState({
+          isLoading: false,
+          isLogin:false});
+      }
+    }
+
+  // componentDidUpdate(prevProps) {
+  //   if(this.props.token != prevProps.token){
+  //     this.setState({
+  //       token:this.props.token});
+  //   }
+  //   // const { isLogin ,token} =prevProps;
+  //   // console.log("islogin in APp", isLogin);
+  //   // console.log("tableData in searchTable", tableData);
+
+
+
+  //   // console.log("in componentWillReceiveProps selectedItems ", this.state.selectedItems);
+  // }
 
 
   getSearchTableData(dataFromChild){
