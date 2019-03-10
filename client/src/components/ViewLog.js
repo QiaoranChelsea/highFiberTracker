@@ -257,7 +257,7 @@ class EnhancedTable extends React.Component {
               console.log("data from array:",json.fiberAmountArray);
              // console.log("data from log:", json.fiberAmountArray.map((item) => {item.recordDate, item.fiberAmount});
             }else{
-              alert("loading error");
+              alert(json.message);
             }
 
         });
