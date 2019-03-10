@@ -175,7 +175,9 @@ router.post('/signin',(req,res,next)=>{
 	    return res.send({
 	      success: true,
 	      message:'valid sign in!',
-	      token: doc._id
+	      token: doc._id,
+	      userId:doc.userId
+
 	    });
 	  })
 

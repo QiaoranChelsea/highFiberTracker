@@ -15,7 +15,9 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 
 import {getFromStorage,
-        setInStorage } from './components/utils/storage'
+        setInStorage } from './components/utils/storage';
+
+import ViewLog from './components/ViewLog';
 
 // const styles = {
 //   root: {
@@ -50,8 +52,8 @@ class AppRouter extends Component {
 	    const obj = getFromStorage('the_main_app');
 
 	    if(obj && obj.token){
-	      const{token} = obj;
-
+	      const{token,userId} = obj;
+	      console.log("userId in sotrage in Approut", userId);
 	      // verify token
 	      fetch('/account/verify?token='+token)
 	        .then(res => res.json())
@@ -59,6 +61,7 @@ class AppRouter extends Component {
 	          if(json.success){
 	            this.setState({
 	              token, 
+	              userId,
 	              isLoading: false,
 	              isLogin:true 
 	            });
@@ -82,13 +85,15 @@ class AppRouter extends Component {
 	      isLoading: true
 	    });
 	    const obj = getFromStorage('the_main_app');
-	    if(obj && obj.token){
+	    if(obj && obj.token ){
 	      const{token} = obj;
+	      // setInStorage('the_main_app', {token: "", userId:""});
 
 	      // verify token
-	      fetch('/account/logout?token='+token)
+	      fetch('/account/logout?token='+ token)
 	        .then(res => res.json())
 	        .then(json => {
+
 	          if(json.success){
 	            this.setState({
 	              token:'', 
@@ -97,9 +102,7 @@ class AppRouter extends Component {
 	            });
 
 	          }else{
-	            this.setState({
-	              isLoading: false 
-	            });
+	          	console.log("log out fail")
 	          }
 
 	      });
@@ -117,7 +120,8 @@ class AppRouter extends Component {
   	}
 
 	render(){
-	  console.log("islogin in app router", this.state.isLogin, this.state.token);
+	  console.log("token in app router", this.state.token);
+	  console.log("userId in app router", this.state.userId);
 
 	  return (
 	    <Router>
@@ -132,7 +136,11 @@ class AppRouter extends Component {
 		            <Link to="/" style={{ textDecoration: 'none' ,color: 'white'}}>High Fiber Tracker</Link> 
 
 		          </Typography>
-		          {(this.state.token) ? ( <Link to="/" style={{ textDecoration: 'none' ,color: 'white'}}> <Button onClick ={this.logout} color="inherit"> logout</Button></Link>)
+		          {(this.state.token) ? 
+		          	( <div>
+		          		<Link to="/viewlog" style={{ textDecoration: 'none' ,color: 'white'}}> <Button color="inherit"> My Data</Button></Link>
+		          		<Link to="/" style={{ textDecoration: 'none' ,color: 'white'}}> <Button onClick ={this.logout} color="inherit"> Log Out</Button></Link>
+		          	  </div>)
 		           : (<div>
 		             <Link to="/signup/" style={{ textDecoration: 'none' ,color: 'white'}}> <Button color="inherit"> Sign In</Button></Link> 
 		             <Link  to="/signup/" style={{ textDecoration: 'none',color: 'white' }}><Button color="inherit"> Sign Up</Button></Link>
@@ -141,8 +149,10 @@ class AppRouter extends Component {
 		      </AppBar>
 		    </div>
 
-	        <Route path="/" exact render={()=><App  isLogin={this.state.isLogin} token = {this.state.token}/>} />
+	        <Route path="/" exact render={()=><App  isLogin={this.state.isLogin} token = {this.state.token}/>} userId = {this.state.userId} />
 	        <Route path="/signup/" render={()=><AccountDefault  getToken={this.getToken}/>} />
+	        <Route path="/viewlog/" render={()=><ViewLog  token = {this.state.token}/>} />
+
 	      </div>
 	    </Router>
 	  );

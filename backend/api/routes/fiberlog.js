@@ -70,7 +70,7 @@ router.get('/getlog', (req, res,next)=>{
 		if(err){
 			return res.send({
 				success: false,
-				fiberAmount: null,
+				fiberAmountArray: null,
 				message:'Error: server error when get user log'
 			});
 		}
@@ -78,14 +78,14 @@ router.get('/getlog', (req, res,next)=>{
 		if(fiberlog.length < 1){
 		    return res.send({
 		      success: false,
-		      fiberAmount: null,
+		      fiberAmountArray: null,
 		      message: 'no record founded'
 		    });
 		}
 
 		return res.send({
 			success:true,
-			fiberAmount: fiberlog,
+			fiberAmountArray: fiberlog,
 			message:'done with get log!!'
 		})
 	})

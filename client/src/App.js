@@ -9,7 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 
 // import Table from './components/table';
-import {MAIN_THEME_COLOR} from './value';
+
+import {getFromStorage,
+        setInStorage } from './components/utils/storage';
 
 
 class App extends Component {
@@ -22,7 +24,8 @@ class App extends Component {
       data:null,
       todaysTotal:0,
       isLogin:false,
-      token:''
+      token:'',
+      userId:''
     }
 
     this.getSearchTableData = this.getSearchTableData.bind(this);
@@ -31,21 +34,67 @@ class App extends Component {
     this.handleClick = this.handleClick.bind(this);
 
   }
-  componentDidMount(){
-    this.setState({selectedItems:[]});
+  // componentDidMount(){
+  //   this.setState({selectedItems:[]});
+  // }
+  componentDidMount() {
+        this.setState({selectedItems:[]});
+
+      const obj = getFromStorage('the_main_app');
+
+      if(obj && obj.token){
+        const{token,userId} = obj;
+
+        // verify token
+        fetch('/account/verify?token='+ token)
+          .then(res => res.json())
+          .then(json => {
+            if(json.success){
+              this.setState({
+                token, 
+                userId,
+                isLoading: false,
+                isLogin:true 
+              });
+            }else{
+              this.setState({
+                isLoading: false,
+                isLogin:false 
+              });
+            }
+
+        });
+      }else{
+        this.setState({
+          isLoading: false,
+          isLogin:false});
+      }
+    }
+
+  componentDidUpdate(prevProps) {
+    if(this.props.token != prevProps.token){
+      this.setState({
+        token:this.props.token});
+      console.log("token in APP update:", this.props.token);
+
+    }
+
+    if(this.props.userId != prevProps.userId){
+      this.setState({
+        userId:this.props.userId});
+      console.log("userId in APP update:", this.props.userId);
+
+    }
+
   }
+  //   // const { isLogin ,token} =prevProps;
+  //   // console.log("islogin in APp", isLogin);
+  //   // console.log("tableData in searchTable", tableData);
 
-  componentWillReceiveProps(props) {
-    const { isLogin ,token} =props;
-    console.log("islogin in APp", isLogin);
-    // console.log("tableData in searchTable", tableData);
 
-    this.setState({
-      isLogin:isLogin,
-      token:token});
 
-    // console.log("in componentWillReceiveProps selectedItems ", this.state.selectedItems);
-  }
+  //   // console.log("in componentWillReceiveProps selectedItems ", this.state.selectedItems);
+  // }
 
 
   getSearchTableData(dataFromChild){
@@ -73,7 +122,7 @@ class App extends Component {
   }
 
   handleClick(){
-    const {todaysTotal,token} = this.state;
+    const {todaysTotal,token,userId} = this.state;
     console.log("todays totle is", todaysTotal);
 
     // post req to backend 
@@ -83,7 +132,7 @@ class App extends Component {
         'Content-Type':'application/json'
       },
       body: JSON.stringify({
-        userId:token,
+        userId:userId,
         fiberAmount: todaysTotal
       })})
     .then(res=>res.json())

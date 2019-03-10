@@ -12,6 +12,7 @@ class AccountDefault extends Component {
     this.state = {
       isLoading:true,
       token:'',
+      userId:'',
       signUpError: '',
       signInError: '',
       masterError:'',
@@ -173,7 +174,7 @@ class AccountDefault extends Component {
     })
       .then(res => res.json())
       .then(json => {
-          setInStorage('the_main_app', {token: json.token});
+          setInStorage('the_main_app', {token: json.token, userId:json.userId});
           if(json.success){
 
             this.setState({
@@ -182,6 +183,7 @@ class AccountDefault extends Component {
               signInEmail:'',
               signUpPassword:'',
               token:json.token,
+              userId:json.userId
             });
             this.props.getToken(json.token);
           }else{
@@ -240,10 +242,11 @@ class AccountDefault extends Component {
       signUpLastName,
       signUpFirstName
     } = this.state;
-    console.log(signUpError);
+    // console.log(signUpError);
     // if (isLoading){
     //   return (<div> <p> loading ... </p></div>)
     // }
+    // console.log("token in account default:", token);
 
     if(!token){
       return (
