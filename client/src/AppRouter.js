@@ -91,6 +91,7 @@ class AppRouter extends Component {
 	      fetch('/account/logout?token='+token)
 	        .then(res => res.json())
 	        .then(json => {
+
 	          if(json.success){
 	            this.setState({
 	              token:'', 

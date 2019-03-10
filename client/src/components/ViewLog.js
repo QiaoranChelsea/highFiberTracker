@@ -22,9 +22,9 @@ import {getFromStorage,
         setInStorage } from './utils/storage';
 
 let counter = 0;
-function createData(name, calories, fat, carbs, protein) {
+function createData(date, fiberTotal) {
   counter += 1;
-  return { id: counter, name, calories, fat, carbs, protein };
+  return { id: counter, date,fiberTotal };
 }
 
 function desc(a, b, orderBy) {
@@ -204,11 +204,7 @@ class EnhancedTable extends React.Component {
     order: 'asc',
     orderBy: 'calories',
     selected: [],
-    data: [
-      createData('12-3', 4.3),
-      createData('12-4', 4.9),
-      createData('12-5', 6.0),
-    ],
+    data: [],
     page: 0,
     rowsPerPage: 5,
     token:''

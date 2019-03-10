@@ -69,11 +69,12 @@ class App extends Component {
       }
     }
 
-  // componentDidUpdate(prevProps) {
-  //   if(this.props.token != prevProps.token){
-  //     this.setState({
-  //       token:this.props.token});
-  //   }
+  componentDidUpdate(prevProps) {
+    if(this.props.token != prevProps.token){
+      this.setState({
+        token:this.props.token});
+    }
+  }
   //   // const { isLogin ,token} =prevProps;
   //   // console.log("islogin in APp", isLogin);
   //   // console.log("tableData in searchTable", tableData);
