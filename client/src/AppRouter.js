@@ -87,6 +87,7 @@ class AppRouter extends Component {
 	    const obj = getFromStorage('the_main_app');
 	    if(obj && obj.token ){
 	      const{token} = obj;
+	      // setInStorage('the_main_app', {token: "", userId:""});
 
 	      // verify token
 	      fetch('/account/logout?token='+ token)
@@ -96,15 +97,12 @@ class AppRouter extends Component {
 	          if(json.success){
 	            this.setState({
 	              token:'', 
-
 	              isLoading: false,
 	              isLogin:false
 	            });
 
 	          }else{
-	            this.setState({
-	              isLoading: false 
-	            });
+	          	console.log("log out fail")
 	          }
 
 	      });

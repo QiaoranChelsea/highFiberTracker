@@ -207,15 +207,16 @@ class EnhancedTable extends React.Component {
     data: [],
     page: 0,
     rowsPerPage: 5,
-    token:''
+    token:'',
+    userId:''
   };
 
   componentDidMount() {
       const obj = getFromStorage('the_main_app');
 
       if(obj && obj.token){
-        const{token} = obj;
-
+        const{token,userId} = obj;
+        console.log("view user data for ", userId);
         // verify token
         fetch('/account/verify?token='+token)
           .then(res => res.json())
@@ -223,6 +224,7 @@ class EnhancedTable extends React.Component {
             if(json.success){
               this.setState({
                 token, 
+                userId,
                 isLoading: false,
                 isLogin:true 
               });
@@ -234,6 +236,21 @@ class EnhancedTable extends React.Component {
             }
 
         });
+
+        fetch('/fiberlog/getlog?userId='+ userId)
+          .then(res => res.json())
+          .then(json => {
+            if(json.success){
+              this.setState({
+                data: json.fiberAmountArray.map((item) => [item.date, item.fiberTotal])
+              });
+             // console.log("data from log:", json.fiberAmountArray.map((item) => [item.date, item.fiberTotal]));
+            }else{
+              alert("loading error");
+            }
+
+        });
+
       }else{
         this.setState({
           isLoading: false,
@@ -246,6 +263,11 @@ class EnhancedTable extends React.Component {
     if(this.props.token != prevProps.token){
       this.setState({
         token:this.props.token});
+    }
+
+    if(this.props.userId != prevProps.userId){
+      this.setState({
+        userId:this.props.userId});
     }
   }
 
@@ -302,29 +324,29 @@ class EnhancedTable extends React.Component {
 
   isSelected = id => this.state.selected.indexOf(id) !== -1;
 
-  // getData(){
-  //     const obj = getFromStorage('the_main_app');
+  getData = () => {
+      const obj = getFromStorage('the_main_app');
 
-  //     if(obj && obj.token){
-  //       const{token} = obj;
+      if(obj && obj.token){
+        const{token,userId} = obj;
 
-  //       // verify token
-  //       fetch('/account/getlog?userId='+token)
-  //         .then(res => res.json())
-  //         .then(json => {
-  //           if(json.success){
-  //             this.setState({
-  //               data: json.fiberAmountArray
-  //             });
-  //           }else{
-  //             alert("loading error");
-  //           }
+        // verify token
+        fetch('/account/getlog?userId='+token,userId)
+          .then(res => res.json())
+          .then(json => {
+            if(json.success){
+              this.setState({
+                data: json.fiberAmountArray.map((item) => [item.date, item.fiberTotal])
+              });
+            }else{
+              alert("loading error");
+            }
 
-  //       });
-  //     }else{
-  //       alert("please log in to get your data");
-  //     }
-  // }
+        });
+      }else{
+        alert("please log in to get your data");
+      }
+  }
 
   render() {
     const { classes } = this.props;

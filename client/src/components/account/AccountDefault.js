@@ -185,7 +185,7 @@ class AccountDefault extends Component {
               token:json.token,
               userId:json.userId
             });
-            // this.props.getToken(json.token);
+            this.props.getToken(json.token);
           }else{
 
             this.setState({
@@ -242,10 +242,11 @@ class AccountDefault extends Component {
       signUpLastName,
       signUpFirstName
     } = this.state;
-    console.log(signUpError);
+    // console.log(signUpError);
     // if (isLoading){
     //   return (<div> <p> loading ... </p></div>)
     // }
+    // console.log("token in account default:", token);
 
     if(!token){
       return (

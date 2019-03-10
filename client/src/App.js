@@ -46,7 +46,7 @@ class App extends Component {
         const{token,userId} = obj;
 
         // verify token
-        fetch('/account/verify?token='+token)
+        fetch('/account/verify?token='+ token)
           .then(res => res.json())
           .then(json => {
             if(json.success){
