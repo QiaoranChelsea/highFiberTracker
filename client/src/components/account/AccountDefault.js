@@ -33,7 +33,7 @@ class AccountDefault extends Component {
     this.onTextBoxChangeSignUpLastName = this.onTextBoxChangeSignUpLastName.bind(this);
     this.onSignUp = this.onSignUp.bind(this)
     this.onSignIn = this.onSignIn.bind(this)
-    this.logout = this.logout.bind(this)
+    // this.logout = this.logout.bind(this)
 
   }
 
@@ -112,7 +112,7 @@ class AccountDefault extends Component {
       isLoading: true,
     });
     // post req to backend 
-    fetch('/account/signup', { 
+    fetch('/account/signup/', { 
       method: 'POST' ,
       headers:{
         'Content-Type':'application/json'
@@ -161,7 +161,7 @@ class AccountDefault extends Component {
 
     // post req to backend 
 
-    fetch('/account/signin', { 
+    fetch('/account/signin/', { 
       method: 'POST' ,
       headers:{
         'Content-Type':'application/json'
@@ -195,36 +195,36 @@ class AccountDefault extends Component {
       });
   }
 
-  logout(){
-    this.setState({
-      isLoading: true
-    });
+  // logout(){
+  //   this.setState({
+  //     isLoading: true
+  //   });
 
-    const obj = getFromStorage('the_main_app');
-    if(obj && obj.token){
-      const{token} = obj;
+  //   const obj = getFromStorage('the_main_app');
+  //   if(obj && obj.token){
+  //     const{token} = obj;
 
-      // verify token
-      fetch('/account/logout?token='+token)
-        .then(res => res.json())
-        .then(json => {
-          if(json.success){
-            this.setState({
-              token:'', 
-              isLoading: false
-            });
-          }else{
-            this.setState({
-              isLoading: false 
-            });
-          }
+  //     // verify token
+  //     fetch('/account/logout?token='+token)
+  //       .then(res => res.json())
+  //       .then(json => {
+  //         if(json.success){
+  //           this.setState({
+  //             token:'', 
+  //             isLoading: false
+  //           });
+  //         }else{
+  //           this.setState({
+  //             isLoading: false 
+  //           });
+  //         }
 
-      });
-    }else{
-      this.setState({isLoading: false,});
-    }
+  //     });
+  //   }else{
+  //     this.setState({isLoading: false,});
+  //   }
 
-  }
+  // }
 
  
   render() {
@@ -310,7 +310,7 @@ class AccountDefault extends Component {
     return (
       <div>
         <p>Sign In Successfully! </p>
-        <Redirect to="/" />
+        <Redirect to= "/"/>
       </div>
 
     );

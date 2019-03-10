@@ -22,6 +22,7 @@ router.post('/insert', (req, res,next)=>{
 	const {body} = req;
 	const {userId,
 		   fiberAmount} = body;
+	// console.log("filber log inser", req);
 
 	if(!fiberAmount){
 		return res.send({
