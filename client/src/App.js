@@ -6,6 +6,8 @@ import SearchTable from './components/searchTable';
 import SelectedTable from './components/selectedTable';
 
 import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+
 // import Table from './components/table';
 import {MAIN_THEME_COLOR} from './value';
 
@@ -18,33 +20,32 @@ class App extends Component {
       searchTableData:[],
       SelectedItems:[],
       data:null,
-      todaysTotal:0
+      todaysTotal:0,
+      isLogin:false
     }
 
     this.getSearchTableData = this.getSearchTableData.bind(this);
     this.getSelectedItems = this.getSelectedItems.bind(this);
     this.getTodaysTotal = this.getTodaysTotal.bind(this);
+    this.handleClick = this.handleClick.bind(this);
 
   }
   componentDidMount(){
     this.setState({selectedItems:[]});
-          // Call our fetch function below once the component mounts
-    this.callBackendAPI()
-      .then(res => this.setState({ data: res.express }))
-      .catch(err => console.log(err));
   }
 
+  componentWillReceiveProps(props) {
+    const { isLogin ,token} =props;
+    console.log("islogin in APp", isLogin);
+    // console.log("tableData in searchTable", tableData);
 
-      // Fetches our GET route from the Express server. (Note the route we are fetching matches the GET route from server.js
-  callBackendAPI = async () => {
-    const response = await fetch('/express_backend');
-    const body = await response.json();
+    this.setState({
+      isLogin:isLogin,
+      token:token});
 
-    if (response.status !== 200) {
-      throw Error(body.message) 
-    }
-    return body;
-  };
+    // console.log("in componentWillReceiveProps selectedItems ", this.state.selectedItems);
+  }
+
 
   getSearchTableData(dataFromChild){
     console.log("dataFromChild:",dataFromChild);
@@ -70,16 +71,25 @@ class App extends Component {
     });
   }
 
+  handleClick(){
+
+
+  }
 
   render() {
   	return(
   		<div>
-        <p className="App-intro">{this.state.data}</p>
-
   	    <div className="App">
   	    	<header className="App-header" >
-            <h1>Today's Total: {this.state.todaysTotal || 0}</h1>
+            <h1>Today's Total: {this.state.todaysTotal || 0} </h1>
+
+            { (this.state.token) ? 
+            (<Button variant="contained" color="secondary" onClick ={this.handleClick}>
+              Submit Today's Data
+            </Button>) : null
+            }
           </header>
+
           <SearchForm getSearchTableData={this.getSearchTableData}  />
 
           <Grid container space = {12}>

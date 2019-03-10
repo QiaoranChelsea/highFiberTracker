@@ -59,17 +59,21 @@ class AppRouter extends Component {
 	          if(json.success){
 	            this.setState({
 	              token, 
-	              isLoading: false
+	              isLoading: false,
+	              isLogin:true 
 	            });
 	          }else{
 	            this.setState({
-	              isLoading: false 
+	              isLoading: false,
+	              isLogin:false 
 	            });
 	          }
 
 	      });
 	    }else{
-	      this.setState({isLoading: false,});
+	      this.setState({
+	      	isLoading: false,
+	      	isLogin:false});
 	    }
   	}
 
@@ -88,8 +92,10 @@ class AppRouter extends Component {
 	          if(json.success){
 	            this.setState({
 	              token:'', 
-	              isLoading: false
+	              isLoading: false,
+	              isLogin:false
 	            });
+
 	          }else{
 	            this.setState({
 	              isLoading: false 
@@ -98,7 +104,9 @@ class AppRouter extends Component {
 
 	      });
 	    }else{
-	      this.setState({isLoading: false,});
+	      this.setState({
+	      	isLoading: false
+	      });
 	    }
 
   	}
@@ -109,6 +117,8 @@ class AppRouter extends Component {
   	}
 
 	render(){
+	  console.log("islogin in app router", this.state.isLogin, this.state.token);
+
 	  return (
 	    <Router>
 	      <div>
@@ -131,7 +141,7 @@ class AppRouter extends Component {
 		      </AppBar>
 		    </div>
 
-	        <Route path="/" exact component={App} />
+	        <Route path="/" exact render={()=><App  isLogin={this.state.isLogin} token = {this.state.token}/>} />
 	        <Route path="/signup/" render={()=><AccountDefault  getToken={this.getToken}/>} />
 	      </div>
 	    </Router>
