@@ -79,7 +79,7 @@ router.get('/getlog', (req, res,next)=>{
 		    return res.send({
 		      success: false,
 		      fiberAmountArray: null,
-		      message: 'no record founded'
+		      message: 'no record founded in our system, please try to submit your daily fiber consumption'
 		    });
 		}
 
