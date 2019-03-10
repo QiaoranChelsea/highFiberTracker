@@ -21,7 +21,8 @@ class App extends Component {
       SelectedItems:[],
       data:null,
       todaysTotal:0,
-      isLogin:false
+      isLogin:false,
+      token:''
     }
 
     this.getSearchTableData = this.getSearchTableData.bind(this);
@@ -72,6 +73,31 @@ class App extends Component {
   }
 
   handleClick(){
+    const {todaysTotal,token} = this.state;
+    console.log("todays totle is", todaysTotal);
+
+    // post req to backend 
+    fetch('/fiberlog/insert/',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json'
+      },
+      body: JSON.stringify({
+        userId:token,
+        fiberAmount: todaysTotal
+      })})
+    .then(res=>res.json())
+    .then(json=>{
+      console.log(json);
+      if(json.success){
+        // do somthing to infor user submit successfully
+        alert("submit daily summary successfully.")
+      }else{
+        alert("Error: failed submit daily summary, please try again.")
+      }
+    })
+
+
 
 
   }
@@ -106,7 +132,6 @@ class App extends Component {
   	    </div>
 	    </div>
 
-	  
     )
   }
 }
