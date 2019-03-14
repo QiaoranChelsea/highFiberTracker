@@ -1,8 +1,45 @@
 import React, { Component } from 'react';
 import 'whatwg-fetch';
 import {getFromStorage,
-        setInStorage } from './utils/storage'
+        setInStorage } from './utils/storage';
+import Input from '@material-ui/core/Input';
+import Paper from '@material-ui/core/Paper';
 
+
+const styles = theme => ({
+  main: {
+    width: 'auto',
+    display: 'block', // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 400,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+  },
+  avatar: {
+    margin: theme.spacing.unit,
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing.unit,
+  },
+  submit: {
+    marginTop: theme.spacing.unit * 3,
+  },
+});
+
+
+@withStyles(styles)
 class SignUp extends Component {
   constructor(props) {
     super(props);
@@ -267,7 +304,7 @@ class SignUp extends Component {
     if(!token){
       return (
         <div>
-          <div> 
+          <Paper className={this.props.classes.paper}> 
             {
               (signInError) ? (<p> {signInError}</p>) : (null) 
             }
@@ -291,30 +328,30 @@ class SignUp extends Component {
           <br/>
           <br/>
 
-          <div>
+          <Paper>
             {
               (signUpError) ? (<p> {signUpError}</p>) : (null) 
             }
-            <p>sign up</p>
-            <input 
+            <p>Sign Up !!!!!</p>
+            <MyInputBase 
               type = "text" 
               placeholder = "First Name"
               value = {this.state.signUpFirstName}
               onChange = {this.onTextBoxChangeSignUpFirstName}
             />  <br/>
-            <input 
+            <MyInputBase 
               type = "text" 
               placeholder = "Last Name"
               value = {signUpLastName}
               onChange = {this.onTextBoxChangeSignUpLastName} 
             /> <br/>
-            <input 
+            <MyInputBase 
               type = "email" 
               placeholder = "Email"
               value = {signUpEmail}
               onChange = {this.onTextBoxChangeSignUpEmail}
              />  <br/>
-            <input 
+            <MyInputBase 
               type = "password" 
               placeholder = "Password"
               value = {signUpPassword}

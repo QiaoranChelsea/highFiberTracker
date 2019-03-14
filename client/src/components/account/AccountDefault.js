@@ -4,6 +4,57 @@ import {getFromStorage,
         setInStorage } from '../utils/storage';
 import { Redirect } from 'react-router-dom'
 
+import { withStyles } from '@material-ui/core/styles';
+import Input from '@material-ui/core/Input';
+import Paper from '@material-ui/core/Paper';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import PropTypes from 'prop-types';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Grid from '@material-ui/core/Grid';
+
+
+
+
+
+const styles = theme => ({
+  main: {
+    width: 'auto',
+    display: 'block', // Fix IE 11 issue.
+    marginLeft: theme.spacing.unit * 3,
+    marginRight: theme.spacing.unit * 3,
+    [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+      width: 400,
+      marginLeft: 'auto',
+      marginRight: 'auto',
+    },
+  },
+  paper: {
+    marginTop: theme.spacing.unit * 8,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+  },
+  avatar: {
+    margin: theme.spacing.unit,
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing.unit,
+  },
+  submit: {
+    marginTop: theme.spacing.unit * 3,
+    background:"#649b42",
+    color:'white'
+  },
+});
+
+
+
 
 class AccountDefault extends Component {
   constructor(props) {
@@ -22,14 +73,15 @@ class AccountDefault extends Component {
       signUpLastName:'',
       signUpEmail:'',
       signUpPassword:'',
+      signUpConfirmPassword:'',
       showSignIn:true
     };
-
 
     this.onTextBoxChangeSignInEmail = this.onTextBoxChangeSignInEmail.bind(this);
     this.onTextBoxChangeSignInPassword = this.onTextBoxChangeSignInPassword.bind(this);
     this.onTextBoxChangeSignUpEmail = this.onTextBoxChangeSignUpEmail.bind(this);
     this.onTextBoxChangeSignUpPassword = this.onTextBoxChangeSignUpPassword.bind(this);
+    this.onTextBoxChangeSignUpConfirmPassword = this.onTextBoxChangeSignUpConfirmPassword.bind(this);
     this.onTextBoxChangeSignUpFirstName = this.onTextBoxChangeSignUpFirstName.bind(this);
     this.onTextBoxChangeSignUpLastName = this.onTextBoxChangeSignUpLastName.bind(this);
     this.onSignUp = this.onSignUp.bind(this)
@@ -89,6 +141,12 @@ class AccountDefault extends Component {
     });
   }  
 
+  onTextBoxChangeSignUpConfirmPassword(event){
+    this.setState({
+      signUpConfirmPassword:event.target.value
+    });
+  }  
+
   onTextBoxChangeSignUpFirstName(event){
     this.setState({
       signUpFirstName:event.target.value
@@ -107,8 +165,15 @@ class AccountDefault extends Component {
           signUpLastName,
           signUpEmail,
           signUpPassword,
+          signUpConfirmPassword
          } = this.state ;
 
+    if(signUpPassword != signUpConfirmPassword){
+            this.setState({
+              signUpError: "Please comfirm your password",
+            });
+    }
+    else{
     this.setState({
       isLoading: true,
     });
@@ -147,6 +212,7 @@ class AccountDefault extends Component {
           } 
 
       });
+    }
   }
 
   onSignIn(){
@@ -189,7 +255,7 @@ class AccountDefault extends Component {
           }else{
 
             this.setState({
-              signUpError: json.message,
+              signInError: json.message,
               isLoading:false
             });
           } 
@@ -240,8 +306,12 @@ class AccountDefault extends Component {
       signUpEmail,
       signUpPassword,
       signUpLastName,
-      signUpFirstName
+      signUpFirstName,
+      signUpConfirmPassword
     } = this.state;
+
+    const { classes } = this.props;
+
     // console.log(signUpError);
     // if (isLoading){
     //   return (<div> <p> loading ... </p></div>)
@@ -251,61 +321,112 @@ class AccountDefault extends Component {
     if(!token){
       return (
         <div>
-          <div> 
-            {
-              (signInError) ? (<p> {signInError}</p>) : (null) 
-            }
+          <Grid container >
+            <Grid item xs = {6}>
+              <div className={classes.main}>
 
-            <p>sign in</p>
-            <input 
-              type = "email" 
-              placeholder = "Email" 
-              value = {signInEmail}
-              onChange = {this.onTextBoxChangeSignInEmail} />  
-              <br/>
-            <input 
-              type = "password" 
-              placeholder = "Password" 
-              value = {signInPassword}
-              onChange = {this.onTextBoxChangeSignInPassword}/>
-          </div>
+                <Paper className={classes.paper}> 
+                  
+                  {
+                    (signInError) ? (<Typography  style= {{color:'red'}}> {signInError}</Typography>) : (null) 
+                  }
+                  <br/>
 
-          <button onClick ={this.onSignIn}> Sign In</button>
+                <form className={classes.form}>
 
-          <br/>
-          <br/>
+                    <Typography component="h1" variant="h5">sign in</Typography>
 
-          <div>
-            {
-              (signUpError) ? (<p> {signUpError}</p>) : (null) 
-            }
-            <p>sign up</p>
-            <input 
-              type = "text" 
-              placeholder = "First Name"
-              value = {this.state.signUpFirstName}
-              onChange = {this.onTextBoxChangeSignUpFirstName}
-            />  <br/>
-            <input 
-              type = "text" 
-              placeholder = "Last Name"
-              value = {signUpLastName}
-              onChange = {this.onTextBoxChangeSignUpLastName} 
-            /> <br/>
-            <input 
-              type = "email" 
-              placeholder = "Email"
-              value = {signUpEmail}
-              onChange = {this.onTextBoxChangeSignUpEmail}
-             />  <br/>
-            <input 
-              type = "password" 
-              placeholder = "Password"
-              value = {signUpPassword}
-              onChange = {this.onTextBoxChangeSignUpPassword}
-            /> <br/>
-            <button onClick ={this.onSignUp}> Sign Up</button>
-          </div>
+                    <FormControl margin="normal" required fullWidth>
+                      <InputLabel >User Name</InputLabel>
+                      <Input 
+                        type = "email" 
+                        value = {signInEmail}
+                        onChange = {this.onTextBoxChangeSignInEmail} />  
+                        
+                    </FormControl>
+
+                    <FormControl margin="normal" required fullWidth>
+                      <InputLabel >Password</InputLabel>
+
+                      <Input 
+                        type = "password" 
+                        value = {signInPassword}
+                        onChange = {this.onTextBoxChangeSignInPassword}/>
+                    </FormControl>
+                  
+                  <Button onClick ={this.onSignIn}
+                          variant="contained"
+                          className={classes.submit}>
+                          Sign In
+                  </Button>
+                </form>
+                </Paper>
+                </div>
+              </Grid>
+
+              <Grid item xs = {5}>
+                <div className={classes.main}>
+                <Paper className={classes.paper}> 
+
+                <form className={classes.form}>
+                    {
+                      (signUpError) ? (<Typography style= {{color:'red'}}> {signUpError}</Typography>) : (null) 
+                    }
+                    <Typography component="h1" variant="h5">Sign Up</Typography>
+                    <FormControl margin="normal"  fullWidth>
+                      <InputLabel >First Name</InputLabel>
+                      <Input 
+                        type = "text" 
+                        value = {this.state.signUpFirstName}
+                        onChange = {this.onTextBoxChangeSignUpFirstName}
+                      />  
+                    </FormControl>
+                    <FormControl margin="normal"  fullWidth>
+                    <InputLabel >Last Name</InputLabel>            
+                      <Input 
+                        type = "text" 
+                        value = {signUpLastName}
+                        onChange = {this.onTextBoxChangeSignUpLastName} 
+                      /> 
+                    </FormControl>
+                    <FormControl margin="normal" required fullWidth>
+                    <InputLabel >User Name</InputLabel>            
+                      <Input 
+                        type = "email" 
+                        value = {signUpEmail}
+                        onChange = {this.onTextBoxChangeSignUpEmail}
+                       />
+                    </FormControl>
+                    <FormControl margin="normal" required fullWidth>
+                    <InputLabel >Password</InputLabel>     
+                      <Input 
+                        type = "password" 
+                        placeholder = "Password"
+                        value = {signUpPassword}
+                        onChange = {this.onTextBoxChangeSignUpPassword}
+                      /> 
+                    </FormControl>
+                    <FormControl margin="normal" required fullWidth>
+                    <InputLabel >Confirm Password</InputLabel>     
+                      <Input 
+                        type = "password" 
+                        placeholder = "Password"
+                        value = {signUpConfirmPassword}
+                        onChange = {this.onTextBoxChangeSignUpConfirmPassword}
+                      /> 
+                    </FormControl>
+                    <Button onClick ={this.onSignUp}
+                          variant="contained"
+                          className={classes.submit}>
+                          Sign Up
+                  </Button>
+
+                  </form>
+                  </Paper>
+
+                </div>
+              </Grid>
+          </Grid>
         </div>
       );
     }
@@ -320,5 +441,9 @@ class AccountDefault extends Component {
   }
 }
 
-export default AccountDefault;
+AccountDefault.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(AccountDefault);
 
