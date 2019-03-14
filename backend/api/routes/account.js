@@ -23,9 +23,9 @@ router.get('/',(req,res,next)=>{
 */
 
 router.post('/signup',(req,res,next)=>{
-	console.log(req);
+	// console.log(req);
 	const {body}  = req;
-	console.log("body", body);
+	// console.log("body", body);
 	const {
 	  password } = body 
 	let{
@@ -35,31 +35,31 @@ router.post('/signup',(req,res,next)=>{
 	} = body;
 
 
-	if(!firstName){
-	  return res.send({
-	    success: false,
-	    message:'Error: First name cannot be blank'
-	  });
-	}  
+	// if(!firstName){
+	//   return res.send({
+	//     success: false,
+	//     message:'Error: First name cannot be blank'
+	//   });
+	// }  
 
-	if(!lastName){
-	  return res.send({
-	    success: false,
-	    message:'Error: Last name cannot be blank'
-	  });
-	} 
+	// if(!lastName){
+	//   return res.send({
+	//     success: false,
+	//     message:'Error: Last name cannot be blank'
+	//   });
+	// } 
 
 	if(!email ){
 	  return res.send({
 	    success: false,
-	    message:'Error: Email cannot be blank'
+	    message:'Error in Sign Up: User Name cannot be blank'
 	  }) ;
 	} 
 
 	if(!password ){
 	  return res.send({
 	    success: false,
-	    message:'Error: Password cannot be blank'
+	    message:'Error in Sign Up: Password cannot be blank'
 	  });
 	}
 
@@ -125,14 +125,14 @@ router.post('/signin',(req,res,next)=>{
 	if(!email ){
 	  return res.send({
 	    success: false,
-	    message:'Error: Email cannot be blank'
+	    message:'Error in Sign In: Email cannot be blank'
 	  }) ;
 	} 
 
 	if(!password ){
 	  return res.send({
 	    success: false,
-	    message:'Error: Password cannot be blank'
+	    message:'Error in Sign In: Password cannot be blank'
 	  });
 	}
 
