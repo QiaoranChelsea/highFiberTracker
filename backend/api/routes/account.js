@@ -99,7 +99,7 @@ router.post('/signup',(req,res,next)=>{
 
 	    return res.send({
 	      success: true,
-	      message:'sign up!'
+	      message:'sign up successfully!'
 	    });
 
 	  })
