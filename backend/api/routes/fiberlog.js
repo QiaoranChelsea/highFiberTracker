@@ -51,7 +51,7 @@ router.post('/insert', (req, res,next)=>{
 
 // insert new log into table 
 router.get('/getlog', (req, res,next)=>{
-	console.log(req);
+	// console.log(req);
 	const {query} = req;
 	const {userId} = query;
 
